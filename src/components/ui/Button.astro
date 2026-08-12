@@ -1,0 +1,53 @@
+---
+interface Props {
+  href: string;
+  variant?: 'cta' | 'ghost' | 'quiet';
+  size?: 'md' | 'lg';
+  class?: string;
+}
+
+const { href, variant = 'cta', size = 'md', class: className = '' } = Astro.props;
+const isExternal = href.startsWith('http');
+
+const base =
+  'group inline-flex items-center justify-center gap-2 rounded-pill font-medium whitespace-nowrap transition duration-300 ease-out-expo';
+
+const variants = {
+  cta: 'bg-cta text-cta-fg shadow-soft hover:bg-cta-hover hover:-translate-y-0.5 hover:shadow-lift active:translate-y-0',
+  ghost:
+    'border border-border-strong text-fg hover:border-fg hover:bg-bg-raised hover:-translate-y-0.5',
+  quiet: 'text-fg underline decoration-border-strong underline-offset-6 hover:decoration-fg'
+};
+
+const sizes = {
+  md: 'px-5 py-2.5 text-[0.9375rem]',
+  lg: 'px-7 py-3.5 text-base'
+};
+---
+
+<a
+  href={href}
+  class:list={[base, variants[variant], variant === 'quiet' ? '' : sizes[size], className]}
+  target={isExternal ? '_blank' : undefined}
+  rel={isExternal ? 'noopener' : undefined}
+>
+  <slot />
+  {
+    variant !== 'quiet' && (
+      <svg
+        class="size-4 transition-transform duration-300 ease-out-expo group-hover:translate-x-0.5"
+        viewBox="0 0 16 16"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M3 8h10m0 0-4-4m4 4-4 4"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    )
+  }
+</a>

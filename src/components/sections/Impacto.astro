@@ -1,0 +1,30 @@
+---
+import { impacto } from '../../data/content';
+import Reveal from '../motion/Reveal';
+import LineReveal from '../motion/LineReveal';
+---
+
+<section id="impacto" class="section border-y border-border bg-bg-deep">
+  <div class="container-page">
+    <Reveal client:visible preset="in">
+      <span class="eyebrow flex items-center gap-2.5">
+        <span class="h-px w-6 bg-border-strong" aria-hidden="true"></span>
+        {impacto.eyebrow}
+      </span>
+    </Reveal>
+
+    <LineReveal
+      client:visible
+      lines={impacto.lines}
+      stagger={0.09}
+      className="mt-14 font-display text-[clamp(2rem,5.6vw,4.5rem)] leading-[1.06] font-semibold tracking-[-0.035em] text-fg"
+      altLineClassName="text-fg-subtle italic"
+    />
+
+    <Reveal client:visible delay={0.2}>
+      <p class="mt-14 max-w-2xl border-t border-border-strong/60 pt-8 text-lead text-fg-muted">
+        {impacto.closing}
+      </p>
+    </Reveal>
+  </div>
+</section>

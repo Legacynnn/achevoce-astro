@@ -1,0 +1,49 @@
+---
+import { Icon } from 'astro-icon/components';
+import { problema } from '../../data/content';
+import SectionHeading from '../ui/SectionHeading.astro';
+import Reveal from '../motion/Reveal';
+---
+
+<section id="problema" class="section border-y border-border bg-bg-muted">
+  <div class="container-page">
+    <div class="grid gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-end lg:gap-20">
+      <Reveal client:visible>
+        <SectionHeading eyebrow={problema.eyebrow}>{problema.title}</SectionHeading>
+      </Reveal>
+      <Reveal client:visible delay={0.1}>
+        <p class="text-lead text-fg-muted">{problema.lead}</p>
+      </Reveal>
+    </div>
+
+    <ol class="mt-16 border-t border-border-strong/60 md:mt-20">
+      {
+        problema.items.map((item, i) => (
+          <Reveal client:visible as="li" delay={i * 0.05} amount={0.4}>
+            <div class="group grid gap-x-10 gap-y-4 border-b border-border py-8 md:grid-cols-12 md:py-11">
+              <div class="flex items-start gap-4 md:col-span-5">
+                <span class="numeral shrink-0 text-[2rem] leading-none text-ghost transition-colors duration-500 ease-out-expo group-hover:text-clay-600">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <h3 class="text-h3">{item.title}</h3>
+              </div>
+
+              <div class="flex gap-4 md:col-span-6 md:col-start-7">
+                <Icon name={`lucide:${item.icon}`} class="mt-1 size-5 shrink-0 text-clay-600" />
+                <p class="text-fg-muted">{item.body}</p>
+              </div>
+            </div>
+          </Reveal>
+        ))
+      }
+    </ol>
+
+    <Reveal client:visible>
+      <p
+        class="mt-16 max-w-4xl font-display text-[clamp(1.5rem,2.8vw,2.375rem)] leading-[1.18] font-normal text-fg italic md:mt-20"
+      >
+        {problema.closing}
+      </p>
+    </Reveal>
+  </div>
+</section>

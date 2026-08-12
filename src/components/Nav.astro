@@ -1,0 +1,298 @@
+---
+import { NAV_LINKS, CTA_URL } from '../lib/site';
+import Button from './ui/Button.astro';
+import Logo from './ui/Logo.astro';
+---
+
+<header id="site-nav" data-state="hero" class="fixed inset-x-0 top-0 z-50">
+  <div class="container-page">
+    <div class="nav-shell relative flex items-center justify-between gap-6">
+      <div class="nav-pill" aria-hidden="true"></div>
+
+      <a
+        href="#top"
+        class="nav-brand relative flex shrink-0 items-center text-fg"
+        aria-label="Ache Você, ir para o topo"
+      >
+        <Logo class="w-9 md:w-10" />
+      </a>
+
+      <nav aria-label="Seções" class="nav-links relative hidden items-center gap-8 lg:flex">
+        {
+          NAV_LINKS.map((link) => (
+            <a href={link.href} class="nav-link text-[0.9375rem] text-fg-muted">
+              {link.label}
+            </a>
+          ))
+        }
+      </nav>
+
+      <div class="nav-actions relative flex shrink-0 items-center gap-2">
+        <Button href={CTA_URL} variant="cta" class="nav-cta max-sm:hidden"
+          >Fazer pré-cadastro</Button
+        >
+
+        <button
+          type="button"
+          id="nav-menu-open"
+          class="nav-burger inline-flex size-11 items-center justify-center rounded-pill border border-border text-fg lg:hidden"
+          aria-label="Abrir menu"
+          aria-haspopup="dialog"
+        >
+          <svg class="size-5" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path
+              d="M3 6h14M3 10h14M3 14h14"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<dialog id="nav-menu" class="nav-menu" aria-label="Menu de navegação">
+  <div class="nav-menu-panel">
+    <div class="container-page">
+      <div class="nav-shell flex items-center justify-between gap-6">
+        <span class="flex items-center text-fg">
+          <Logo class="w-9 md:w-10" title="Ache Você" />
+        </span>
+
+        <button
+          type="button"
+          id="nav-menu-close"
+          class="inline-flex size-11 items-center justify-center rounded-pill border border-border text-fg"
+          aria-label="Fechar menu"
+        >
+          <svg class="size-5" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path
+              d="M5 5l10 10M15 5L5 15"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"></path>
+          </svg>
+        </button>
+      </div>
+
+      <nav aria-label="Seções" class="mt-8 flex flex-col border-t border-border">
+        {
+          NAV_LINKS.map((link) => (
+            <a
+              href={link.href}
+              class="nav-menu-link border-b border-border py-5 font-display text-[1.75rem] leading-none font-semibold text-fg"
+            >
+              {link.label}
+            </a>
+          ))
+        }
+      </nav>
+
+      <div class="mt-10">
+        <Button href={CTA_URL} variant="cta" size="lg" class="w-full">Fazer pré-cadastro</Button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  .nav-shell {
+    height: var(--header-h);
+  }
+
+  .nav-pill {
+    position: absolute;
+    inset-block: 0.5rem;
+    inset-inline: -1rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-border);
+    background: color-mix(in oklab, var(--color-bg) 92%, transparent);
+    box-shadow: var(--shadow-soft);
+    opacity: 0;
+    transform: scale(1.05) translateY(-0.5rem);
+    transition:
+      opacity 0.5s var(--ease-out-expo),
+      transform 0.6s var(--ease-out-expo);
+  }
+
+  @supports (backdrop-filter: blur(1px)) {
+    .nav-pill {
+      background: color-mix(in oklab, var(--color-bg) 84%, transparent);
+      backdrop-filter: blur(24px) saturate(1.4);
+    }
+  }
+
+  .nav-brand,
+  .nav-actions,
+  .nav-cta {
+    transition: transform 0.6s var(--ease-out-expo);
+  }
+
+  #site-nav[data-state='float'] .nav-pill {
+    opacity: 1;
+    transform: none;
+  }
+
+  #site-nav[data-state='float'] .nav-brand {
+    transform: translateX(0.375rem);
+  }
+
+  #site-nav[data-state='float'] .nav-actions {
+    transform: translateX(-0.375rem);
+  }
+
+  #site-nav[data-state='float'] .nav-cta {
+    transform: scale(0.94);
+  }
+
+  .nav-link {
+    position: relative;
+    transition: color 0.2s ease;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -0.375rem;
+    height: 1px;
+    width: 0;
+    background: currentColor;
+    transition: width 0.3s var(--ease-out-expo);
+  }
+
+  .nav-link:hover {
+    color: var(--color-fg);
+  }
+
+  .nav-link:hover::after {
+    width: 100%;
+  }
+
+  .nav-menu {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    overflow: hidden;
+  }
+
+  .nav-menu::backdrop {
+    background: color-mix(in oklab, var(--color-ink-900) 34%, transparent);
+    opacity: 0;
+    transition: opacity 0.4s var(--ease-out-expo);
+  }
+
+  .nav-menu[open]::backdrop {
+    opacity: 1;
+  }
+
+  .nav-menu-panel {
+    background: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 2.5rem;
+    opacity: 0;
+    transform: translateY(-1.5rem);
+    transition:
+      opacity 0.45s var(--ease-out-expo),
+      transform 0.55s var(--ease-out-expo);
+  }
+
+  .nav-menu[open] .nav-menu-panel {
+    opacity: 1;
+    transform: none;
+  }
+
+  .nav-menu-link {
+    transition: color 0.2s ease;
+  }
+
+  .nav-menu-link:hover {
+    color: var(--color-fg-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-pill,
+    .nav-brand,
+    .nav-actions,
+    .nav-cta,
+    .nav-menu::backdrop,
+    .nav-menu-panel {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const nav = document.getElementById('site-nav');
+  const menu = document.getElementById('nav-menu') as HTMLDialogElement | null;
+  const openBtn = document.getElementById('nav-menu-open');
+  const closeBtn = document.getElementById('nav-menu-close');
+
+  const ENTER = 24;
+  const EXIT = 8;
+
+  let floating = false;
+  let ticking = false;
+
+  const read = () => {
+    ticking = false;
+    if (!nav) return;
+    const y = window.scrollY;
+    if (!floating && y > ENTER) {
+      floating = true;
+      nav.dataset.state = 'float';
+    } else if (floating && y < EXIT) {
+      floating = false;
+      nav.dataset.state = 'hero';
+    }
+  };
+
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(read);
+  };
+
+  read();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  const openMenu = async () => {
+    if (!menu || menu.open) return;
+    menu.showModal();
+    const { getLenis } = await import('../lib/lenis');
+    getLenis()?.stop();
+  };
+
+  const closeMenu = async () => {
+    if (!menu?.open) return;
+    menu.close();
+    const { getLenis } = await import('../lib/lenis');
+    getLenis()?.start();
+  };
+
+  openBtn?.addEventListener('click', openMenu);
+  closeBtn?.addEventListener('click', closeMenu);
+  menu?.addEventListener('close', () => {
+    import('../lib/lenis').then(({ getLenis }) => getLenis()?.start());
+  });
+
+  menu?.addEventListener('click', (event) => {
+    if (event.target === menu) closeMenu();
+  });
+
+  menu?.querySelectorAll('a[href^="#"]').forEach((link) => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  const mql = window.matchMedia('(width >= 64rem)');
+  mql.addEventListener('change', (event) => {
+    if (event.matches) closeMenu();
+  });
+</script>

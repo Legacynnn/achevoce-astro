@@ -1,0 +1,50 @@
+---
+import { ctaFinal } from '../../data/content';
+import { CTA_URL } from '../../lib/site';
+import Reveal from '../motion/Reveal';
+---
+
+<section id="cadastro" class="pb-section">
+  <div class="container-page">
+    <Reveal client:visible preset="scale">
+      <div
+        class="relative overflow-hidden rounded-frame bg-cta px-7 py-20 text-center md:px-16 md:py-28"
+      >
+        <div
+          class="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_80%_at_50%_0%,rgb(255_255_255/0.18)_0%,transparent_65%)]"
+          aria-hidden="true"
+        >
+        </div>
+
+        <div class="relative mx-auto max-w-3xl">
+          <h2 class="text-h2 text-cta-fg">{ctaFinal.title}</h2>
+          <p class="mx-auto mt-6 max-w-xl text-lead text-purple-100">{ctaFinal.lead}</p>
+
+          <a
+            href={CTA_URL}
+            target="_blank"
+            rel="noopener"
+            class="group mt-10 inline-flex items-center justify-center gap-2 rounded-pill bg-cream-50 px-8 py-4 text-base font-medium text-purple-700 transition duration-300 ease-out-expo hover:-translate-y-0.5 hover:bg-white"
+          >
+            {ctaFinal.cta}
+            <svg
+              class="size-4 transition-transform duration-300 ease-out-expo group-hover:translate-x-0.5"
+              viewBox="0 0 16 16"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M3 8h10m0 0-4-4m4 4-4 4"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"></path>
+            </svg>
+          </a>
+
+          <p class="mt-6 text-sm text-purple-100/80">{ctaFinal.note}</p>
+        </div>
+      </div>
+    </Reveal>
+  </div>
+</section>

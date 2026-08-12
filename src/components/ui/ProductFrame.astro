@@ -1,0 +1,54 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  label?: string;
+  sizes?: string;
+  loading?: 'lazy' | 'eager';
+  class?: string;
+}
+
+const {
+  src,
+  alt,
+  label = 'app.achevoce.com.br',
+  sizes = '(min-width: 1200px) 1152px, 100vw',
+  loading = 'eager',
+  class: className = ''
+} = Astro.props;
+---
+
+<figure
+  class:list={[
+    'relative overflow-hidden rounded-frame border border-border bg-bg-raised shadow-frame',
+    className
+  ]}
+>
+  <div class="flex items-center gap-3 border-b border-border bg-sand-200 px-4 py-3">
+    <span class="flex gap-1.5" aria-hidden="true">
+      <span class="size-2.5 rounded-full bg-sand-400"></span>
+      <span class="size-2.5 rounded-full bg-sand-400"></span>
+      <span class="size-2.5 rounded-full bg-sand-400"></span>
+    </span>
+    <span
+      class="truncate rounded-pill bg-bg-raised px-3 py-1 text-[0.6875rem] tracking-wide text-fg-subtle"
+      >{label}</span
+    >
+  </div>
+
+  <div class="relative aspect-square overflow-hidden sm:aspect-[1586/630]">
+    <Image
+      src={src}
+      alt={alt}
+      widths={[760, 1100, 1600, 2200]}
+      sizes={sizes}
+      loading={loading}
+      fetchpriority={loading === 'eager' ? 'high' : undefined}
+      format="webp"
+      quality={78}
+      class="absolute top-0 left-0 block w-full origin-top-left scale-[2.05] sm:scale-100"
+    />
+  </div>
+</figure>

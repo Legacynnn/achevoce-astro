@@ -1,0 +1,49 @@
+---
+import { publico, seguranca } from '../../data/content';
+import SectionHeading from '../ui/SectionHeading.astro';
+import Pill from '../ui/Pill.astro';
+import Reveal from '../motion/Reveal';
+---
+
+<section id="publico" class="section">
+  <div class="container-page">
+    <div class="grid gap-16 lg:grid-cols-[1fr_0.85fr] lg:gap-24">
+      <div>
+        <Reveal client:visible>
+          <SectionHeading eyebrow={publico.eyebrow}>
+            {publico.title}
+            <p slot="lead" class="text-lead text-fg-muted">{publico.lead}</p>
+          </SectionHeading>
+        </Reveal>
+
+        <Reveal client:visible delay={0.1}>
+          <ul class="mt-10 flex flex-wrap gap-2.5">
+            {
+              publico.roles.map((role) => (
+                <li>
+                  <Pill tone="raised">{role}</Pill>
+                </li>
+              ))
+            }
+          </ul>
+        </Reveal>
+      </div>
+
+      <Reveal client:visible delay={0.15}>
+        <div class="border-t border-border-strong/60 pt-8">
+          <span class="eyebrow">{seguranca.eyebrow}</span>
+          <h2 class="mt-5 text-h3 max-w-sm">{seguranca.title}</h2>
+          <ul class="mt-9 flex flex-col">
+            {
+              seguranca.points.map((point) => (
+                <li class="border-b border-border py-5 first:border-t">
+                  <p class="text-[0.9375rem] text-fg-muted">{point}</p>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </Reveal>
+    </div>
+  </div>
+</section>

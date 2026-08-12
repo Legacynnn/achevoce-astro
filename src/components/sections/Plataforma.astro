@@ -1,0 +1,56 @@
+---
+import { plataforma } from '../../data/content';
+import SectionHeading from '../ui/SectionHeading.astro';
+import Screenshot from '../ui/Screenshot.astro';
+import Reveal from '../motion/Reveal';
+import favoritos from '../../assets/screens/favoritos.png';
+import minhaEmpresa from '../../assets/screens/minha-empresa.png';
+
+const shots = [favoritos, minhaEmpresa];
+---
+
+<section id="plataforma" class="section">
+  <div class="container-page">
+    <Reveal client:visible>
+      <SectionHeading eyebrow={plataforma.eyebrow} class="max-w-3xl">
+        {plataforma.title}
+        <p slot="lead" class="max-w-2xl text-lead text-fg-muted">{plataforma.lead}</p>
+      </SectionHeading>
+    </Reveal>
+
+    <ol class="mt-16 flex flex-col gap-20 md:mt-20 md:gap-28">
+      {
+        plataforma.items.map((item, i) => (
+          <li class="grid items-center gap-8 lg:grid-cols-12 lg:gap-16">
+            <Reveal
+              client:visible
+              preset="scale"
+              amount={0.25}
+              className={i % 2 === 1 ? 'lg:col-span-7 lg:col-start-6' : 'lg:col-span-7'}
+            >
+              <Screenshot src={shots[i]} alt={item.alt} sizes="(min-width: 1024px) 54vw, 92vw" />
+            </Reveal>
+
+            <Reveal
+              client:visible
+              delay={0.08}
+              className={
+                i % 2 === 1
+                  ? 'lg:col-span-4 lg:col-start-1 lg:row-start-1'
+                  : 'lg:col-span-4 lg:col-start-9'
+              }
+            >
+              <div>
+                <span class="numeral block text-[1.5rem] leading-none text-ghost">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <h3 class="mt-4 text-h3">{item.title}</h3>
+                <p class="mt-4 text-fg-muted">{item.body}</p>
+              </div>
+            </Reveal>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
