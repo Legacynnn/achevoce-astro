@@ -97,7 +97,8 @@ Corpo em `1rem/1.65`. Itálico de Fraunces é recurso de ênfase editorial, usad
 
 - Container: `max-width: 76rem`, padding lateral `1.5rem` / `2.5rem` a partir de 48rem (`.container-page`).
 - Ritmo vertical: `--spacing-section: clamp(5rem, 10vw, 9rem)` (`.section`).
-- Altura do header em `--header-h` (`4.5rem`, `5rem` a partir de 48rem). É a fonte única: `scroll-padding-top`, offset do Lenis e o `top` dos elementos sticky derivam dela.
+- Altura do header em `--header-h` (`4.5rem`, `5rem` a partir de 48rem). É a fonte única: `scroll-padding-top` e o `top` dos elementos sticky derivam dela.
+- Largura do header é maior que a das seções por decisão: `.container-wide` (`88rem`) no `#site-nav` e no painel do menu mobile, contra `.container-page` (`76rem`) no conteúdo. Ambas compartilham `--page-pad`, então o respiro lateral é o mesmo; só o limite muda.
 - Faixas: `bg` → `bg-muted` → `bg` → `bg-muted` → `bg` → `bg-muted` → `bg` → `bg-deep` (Impacto) → `bg` → painel roxo. Nunca duas faixas iguais seguidas.
 - Raios: `--radius-card: 20px`, `--radius-field: 12px`, `--radius-frame: 26px`, `--radius-pill: 999px`.
 - Sombras: `--shadow-soft`, `--shadow-lift` e `--shadow-frame`, todas quentes (`rgb(40 30 10 / …)`). Filete de 1px em `--color-border` faz a maior parte da separação.
@@ -114,15 +115,16 @@ Para matrizes (Benefícios), a grade usa `gap: 1px` sobre `bg-border` com as cé
 - `ui/Logo.astro` — logograma em SVG com o gradiente da marca. Sem texto: a palavra "Ache Você" é composta em Fraunces ao lado, nunca desenhada.
 - `ui/Screenshot.astro` — moldura de janela para telas de seção: filete, raio 20px, barra superior com três pontos em areia, `--shadow-lift`. Sempre com `alt` descritivo.
 - `ui/ProductFrame.astro` — moldura maior do hero: `--radius-frame`, `--shadow-frame`, recorte `aspect-square` no mobile e `1586/630` a partir de `sm`. O zoom do mobile é `transform: scale()`, **nunca `min-width`**: largura intrínseca vaza para o viewport de layout mesmo dentro de `overflow-hidden`; transform é só pintura.
-- `motion/Reveal.tsx`, `motion/LineReveal.tsx`, `motion/HeroScreen.tsx` — ilhas React com `motion`, hidratação `client:visible` (o hero usa `client:load`).
+- `motion/Reveal.tsx`, `motion/LineReveal.tsx` — ilhas React com `motion`, hidratação `client:visible`. **O hero não tem ilha nenhuma:** acima da dobra não roda React. `motion/HeroScreen.tsx` e `motion/HeroVisual.tsx` foram removidos.
 
 ## Motion
 
 - Curva única: `cubic-bezier(0.22, 1, 0.36, 1)` (`--ease-out-expo`). Sem bounce, sem elastic.
 - Entrada do hero é CSS puro (`.rise`), sem JS acima da dobra.
 - Abaixo da dobra: fade + subida de 24px, `once: true`, stagger de 60–100ms.
-- Lenis para scroll suave, com `anchors.offset: -104` (alinhado a `--header-h` + `1.5rem`).
-- `prefers-reduced-motion` desliga o Lenis, para a deriva da aurora e força estado final em todas as ilhas — incluindo a tela do hero, que renderiza reta e sem escala.
+- **Scroll é nativo. Não há Lenis e não deve voltar.** Medido: com o Lenis, um único tique de roda levava **804ms** para assentar, e o rAF dele rodava a **121fps mesmo com a página parada**. Nem o Lenis sozinho nem as ilhas sozinhas derrubavam quadro; os dois juntos, sim. Aurora, glow, sombra da moldura, blur do header e o screenshot foram todos medidos e nenhum tem custo relevante. Se alguém reabrir "o scroll está travado", medir antes de mexer em CSS.
+- Âncoras usam `scroll-behavior: smooth` + `scroll-padding-top: calc(var(--header-h) + 1.5rem)` no `html` — os mesmos 104px que o offset do Lenis tinha, agora sem JS.
+- `prefers-reduced-motion` para a deriva da aurora, zera a entrada do hero e força estado final em todas as ilhas.
 - Em revelações com máscara (`overflow-hidden`), o observador precisa ficar no elemento **externo**: o elemento interno transladado tem interseção zero e nunca dispara.
 
 ### Header, dois estados
@@ -135,9 +137,11 @@ A pílula é o **único** blur da página, e é o blur permitido: o header fica 
 
 ### Tela do hero
 
-A moldura entra inclinada (`rotateX(11deg)`, `scale(0.92)`) e endireita conforme o scroll avança até 620px, com o glow desbotando junto. É a recompensa do gesto que a página inteira pede.
+A moldura entra inclinada (`rotateX(9deg)`, `scale(0.94)`) e endireita **uma vez, no load**, em CSS puro. Não é mais atrelada ao scroll: aquilo exigia uma ilha React escrevendo transform a cada quadro sobre o maior elemento da página. A `perspective` mora dentro do próprio `@keyframes`, nunca no pai — no pai ela deixa um contexto 3D permanente em volta do screenshot e da sombra de 90px. O glow é estático, feito de radiais com borda suave em vez de `filter: blur()`.
 
-O bloco de texto do hero tem `min-height: max(30rem, 72svh)` para que a moldura seja cortada pela dobra: 47% visível a 900px de altura, 58% a 1080px. O fator `72svh` é o que amarra isso — mexer nele muda quanto da tela aparece.
+O título ocupa a largura inteira do container e compõe em **duas linhas** a partir de `lg`. Isso é estrutural, não estético: com o título em coluna estreita ele quebrava em quatro linhas, o bloco de texto passava do `min-height` e a dobra deixava de ser controlável pelo token.
+
+O bloco de texto do hero tem `min-height: max(28rem, 66svh)` para que a moldura seja cortada pela dobra. Medido: **48% visível a 900px** de altura, 60% a 1080px, 36% a 800px. O fator `66svh` é o que amarra isso — mexer nele muda quanto da tela aparece, e o valor só vale enquanto o título couber em duas linhas.
 
 ### Sticky de "Como funciona"
 
@@ -147,7 +151,7 @@ As duas colunas ficam `sticky` no mesmo `top`, com a linha em `min-height: 100sv
 
 O contraste é verificado por medição de pixel, não por estimativa: capturar a página com `color: transparent` em tudo (mantém fundos, gradientes e preenchimentos), amostrar o pixel atrás de cada nó de texto e comparar com a cor computada. Amostrar sem apagar o texto lê o próprio glifo; esconder os elementos lê o fundo errado. O estado atual é 115 nós, todos em AA.
 
-O menu mobile é um `<dialog>` com `showModal()`: trap de foco, `Esc` e inert do resto vêm de graça do browser. Ele para o Lenis ao abrir e religa no evento `close`.
+O menu mobile é um `<dialog>` com `showModal()`: trap de foco, `Esc`, inert do resto e trava de scroll vêm de graça do browser.
 
 ## Imagery
 

@@ -78,12 +78,5 @@ const jsonLd = {
       <slot />
     </main>
     <Footer />
-
-    <script>
-      import { initLenis, destroyLenis } from '../lib/lenis';
-
-      initLenis();
-      document.addEventListener('astro:before-swap', destroyLenis);
-    </script>
   </body>
 </html>
