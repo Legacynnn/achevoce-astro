@@ -14,7 +14,7 @@ const {
   src,
   alt,
   label = 'app.achevoce.com.br',
-  sizes = '(min-width: 1200px) 1152px, 100vw',
+  sizes = '(min-width: 1488px) 1328px, (min-width: 768px) calc(100vw - 5rem), calc(100vw - 3rem)',
   loading = 'eager',
   class: className = ''
 } = Astro.props;
@@ -45,6 +45,7 @@ const {
       widths={[760, 1100, 1600, 2200]}
       sizes={sizes}
       loading={loading}
+      decoding="async"
       fetchpriority={loading === 'eager' ? 'high' : undefined}
       format="webp"
       quality={78}
