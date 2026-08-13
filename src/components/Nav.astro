@@ -107,20 +107,13 @@ import Logo from './ui/Logo.astro';
     inset-inline: -1rem;
     border-radius: var(--radius-pill);
     border: 1px solid var(--color-border);
-    background: color-mix(in oklab, var(--color-bg) 92%, transparent);
+    background: color-mix(in oklab, var(--color-bg) 97%, transparent);
     box-shadow: var(--shadow-soft);
     opacity: 0;
     transform: scale(1.05) translateY(-0.5rem);
     transition:
       opacity 0.5s var(--ease-out-expo),
       transform 0.6s var(--ease-out-expo);
-  }
-
-  @supports (backdrop-filter: blur(1px)) {
-    .nav-pill {
-      background: color-mix(in oklab, var(--color-bg) 84%, transparent);
-      backdrop-filter: blur(24px) saturate(1.4);
-    }
   }
 
   .nav-brand,

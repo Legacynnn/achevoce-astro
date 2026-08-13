@@ -14,7 +14,7 @@ import marketplace from '../../assets/screens/favoritos.png';
       <div class="grid items-end gap-x-10 gap-y-12 lg:grid-cols-12">
         <div class="lg:col-span-7">
           <span
-            class="eyebrow rise marker max-w-full rounded-pill border border-border bg-bg-raised/85 px-4 py-2 text-[0.6875rem] backdrop-blur-sm sm:text-eyebrow"
+            class="eyebrow rise marker max-w-full rounded-pill border border-border bg-bg-raised px-4 py-2 text-[0.6875rem] sm:text-eyebrow"
           >
             <span class="size-1.5 shrink-0 rounded-full bg-moss-600" aria-hidden="true"></span>
             {hero.eyebrow}
@@ -71,7 +71,7 @@ import marketplace from '../../assets/screens/favoritos.png';
   </div>
 
   <div class="container-wide mt-14 md:mt-20">
-    <div class="hero-stage relative">
+    <div class="relative">
       <div class="screen-glow" aria-hidden="true"></div>
       <div class="hero-screen">
         <ProductFrame
@@ -84,10 +84,6 @@ import marketplace from '../../assets/screens/favoritos.png';
 </section>
 
 <style>
-  .hero-stage {
-    perspective: 1600px;
-  }
-
   .hero-screen {
     transform-origin: top center;
     animation: hero-screen-in 1.2s var(--ease-out-expo) 0.35s both;
@@ -96,11 +92,11 @@ import marketplace from '../../assets/screens/favoritos.png';
   @keyframes hero-screen-in {
     from {
       opacity: 0;
-      transform: translate3d(0, 56px, 0) rotateX(10deg) scale(0.94);
+      transform: perspective(1600px) translate3d(0, 56px, 0) rotateX(10deg) scale(0.94);
     }
     to {
       opacity: 1;
-      transform: translate3d(0, 0, 0) rotateX(0deg) scale(1);
+      transform: none;
     }
   }
 
