@@ -18,14 +18,14 @@ const shots = [anunciar, meusAlertas, anuncioDetalhe];
       </SectionHeading>
     </Reveal>
 
-    <ol class="mt-16 flex flex-col gap-20 md:mt-20 lg:gap-0">
+    <ol class="mt-12 flex flex-col gap-16 sm:mt-16 sm:gap-20 md:mt-20 lg:gap-0">
       {
         comoFunciona.steps.map((step, i) => (
           <li class="grid gap-8 lg:min-h-[100svh] lg:grid-cols-[0.85fr_1.15fr] lg:items-start lg:gap-20 lg:pb-24">
             <div class="lg:sticky lg:top-[max(calc(var(--header-h)+4rem),calc(50svh-9.5rem))] lg:self-start">
               <Reveal client:visible>
                 <div class="max-w-md">
-                  <span class="numeral block text-[clamp(3rem,6vw,5rem)] leading-none text-ghost">
+                  <span class="numeral block text-[clamp(2.5rem,6vw,5rem)] leading-none text-ghost">
                     {step.number}
                   </span>
                   <h3 class="mt-5 text-h2">{step.title}</h3>

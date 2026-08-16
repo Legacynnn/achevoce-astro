@@ -8,7 +8,7 @@ import Reveal from '../motion/Reveal';
   <div class="container-page">
     <Reveal client:visible preset="scale">
       <div
-        class="relative overflow-hidden rounded-frame bg-cta px-7 py-20 text-center md:px-16 md:py-28"
+        class="relative overflow-hidden rounded-frame bg-cta px-5 py-16 text-center sm:px-7 sm:py-20 md:px-16 md:py-28"
       >
         <div
           class="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_80%_at_50%_0%,rgb(255_255_255/0.18)_0%,transparent_65%)]"
@@ -24,7 +24,7 @@ import Reveal from '../motion/Reveal';
             href={CTA_URL}
             target="_blank"
             rel="noopener"
-            class="group mt-10 inline-flex items-center justify-center gap-2 rounded-pill bg-cream-50 px-8 py-4 text-base font-medium text-purple-700 transition duration-300 ease-out-expo hover:-translate-y-0.5 hover:bg-white"
+            class="group mt-10 inline-flex min-h-12 items-center justify-center gap-2 rounded-pill bg-cream-50 px-7 py-3.5 text-base font-medium text-purple-700 transition duration-300 ease-out-expo hover:-translate-y-0.5 hover:bg-white [touch-action:manipulation] sm:px-8 sm:py-4"
           >
             {ctaFinal.cta}
             <svg

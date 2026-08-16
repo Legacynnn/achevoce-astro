@@ -22,23 +22,15 @@ const {
 
 <figure
   class:list={[
-    'relative overflow-hidden rounded-frame border border-border bg-bg-raised shadow-frame',
+    'relative isolate overflow-hidden contain-paint rounded-frame border border-border bg-bg-raised shadow-frame',
     className
   ]}
 >
-  <div class="flex items-center gap-3 border-b border-border bg-sand-200 px-4 py-3">
-    <span class="flex gap-1.5" aria-hidden="true">
-      <span class="size-2.5 rounded-full bg-sand-400"></span>
-      <span class="size-2.5 rounded-full bg-sand-400"></span>
-      <span class="size-2.5 rounded-full bg-sand-400"></span>
-    </span>
-    <span
-      class="truncate rounded-pill bg-bg-raised px-3 py-1 text-[0.6875rem] tracking-wide text-fg-subtle"
-      >{label}</span
-    >
+  <div class="border-b border-border bg-sand-200 px-4 py-3 sm:px-6">
+    <span class="eyebrow block truncate text-[0.6875rem] normal-case">{label}</span>
   </div>
 
-  <div class="relative aspect-square overflow-hidden sm:aspect-[1586/630]">
+  <div class="relative isolate aspect-square overflow-hidden contain-paint sm:aspect-[1586/630]">
     <Image
       src={src}
       alt={alt}

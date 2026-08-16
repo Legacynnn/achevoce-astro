@@ -10,7 +10,7 @@ const { href, variant = 'cta', size = 'md', class: className = '' } = Astro.prop
 const isExternal = href.startsWith('http');
 
 const base =
-  'group inline-flex items-center justify-center gap-2 rounded-pill font-medium whitespace-nowrap transition duration-300 ease-out-expo';
+  'group inline-flex min-h-11 items-center justify-center gap-2 rounded-pill font-medium whitespace-nowrap transition duration-300 ease-out-expo [touch-action:manipulation]';
 
 const variants = {
   cta: 'bg-cta text-cta-fg shadow-soft hover:bg-cta-hover hover:-translate-y-0.5 hover:shadow-lift active:translate-y-0',

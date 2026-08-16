@@ -1,7 +1,7 @@
 export const hero = {
   eyebrow: 'Rede hospitalar de reintegração',
   title: ['O que vence no seu hospital', 'salva o orçamento de outro.'],
-  lead: 'O Ache Você conecta instituições de saúde que têm medicamentos, insumos e equipamentos disponíveis com as que precisam deles. O que viraria perda volta a ser recurso.',
+  lead: 'A rede que conecta quem tem medicamentos, insumos e equipamentos disponíveis com quem precisa deles. O que viraria perda volta a ser recurso.',
   ctaPrimary: 'Fazer pré-cadastro',
   ctaSecondary: 'Ver como funciona',
   proof: [

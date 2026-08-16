@@ -37,6 +37,11 @@
   --font-display: var(--font-fraunces);
   --font-sans: var(--font-inter-tight);
 
+  --text-hero: clamp(2rem, 6.4vw, 5rem);
+  --text-hero--line-height: 0.98;
+  --text-hero--letter-spacing: -0.04em;
+  --text-hero--font-weight: 600;
+
   --text-display: clamp(2.5rem, 5vw, 4rem);
   --text-display--line-height: 1.02;
   --text-display--letter-spacing: -0.035em;
@@ -69,16 +74,19 @@
   --shadow-lift: 0 2px 4px rgb(40 30 10 / 0.05), 0 26px 60px -22px rgb(40 30 10 / 0.22);
   --shadow-frame: 0 2px 6px rgb(40 30 10 / 0.06), 0 40px 90px -30px rgb(40 30 10 / 0.3);
 
-  --spacing-section: clamp(5rem, 10vw, 9rem);
+  --spacing-section: clamp(4rem, 10vw, 9rem);
 
   --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 :root {
-  --header-h: 4.5rem;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --header-bar: 4.5rem;
+  --header-h: calc(var(--header-bar) + var(--safe-top));
   --page-w: 76rem;
   --page-wide-w: 88rem;
-  --page-pad: 1.5rem;
+  --page-pad: max(1.25rem, env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
 
   --brand-1: #6bc629;
   --brand-2: #34ae52;
@@ -93,10 +101,17 @@
   --aurora-violet: oklch(0.7 0.15 300);
 }
 
+@media (width >= 23.5rem) {
+  :root {
+    --page-pad: max(1.5rem, env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
+  }
+}
+
 @media (width >= 48rem) {
   :root {
-    --header-h: 5rem;
-    --page-pad: 2.5rem;
+    --header-bar: 5rem;
+    --header-h: calc(var(--header-bar) + var(--safe-top));
+    --page-pad: max(2.5rem, env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
   }
 }
 
@@ -106,6 +121,8 @@
     scroll-behavior: smooth;
     scroll-padding-top: calc(var(--header-h) + 1.5rem);
     overflow-x: clip;
+    overscroll-behavior-x: none;
+    max-width: 100%;
   }
 
   body {
@@ -114,6 +131,8 @@
     font-family: var(--font-sans);
     font-size: 1rem;
     line-height: 1.65;
+    max-width: 100%;
+    overflow-wrap: break-word;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -219,34 +238,43 @@
   font-variant-numeric: tabular-nums lining-nums;
 }
 
-@utility aurora {
+@utility aurora-clip {
   position: absolute;
   inset-inline: 0;
   inset-block-start: calc(var(--header-h) * -1);
-  height: clamp(40rem, 96svh, 68rem);
+  z-index: -10;
+  height: clamp(44rem, 104svh, 74rem);
+  overflow-x: clip;
+  contain: paint;
+  pointer-events: none;
+}
+
+@utility aurora {
+  position: absolute;
+  inset: 0;
   pointer-events: none;
   background:
     radial-gradient(
-      48% 42% at 6% 12%,
-      color-mix(in oklab, var(--aurora-green) 46%, transparent) 0%,
+      52% 46% at 4% 14%,
+      color-mix(in oklab, var(--aurora-green) 52%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      48% 44% at 30% 0%,
+      color-mix(in oklab, var(--aurora-teal) 46%, transparent) 0%,
       transparent 68%
     ),
     radial-gradient(
-      44% 40% at 32% 0%,
-      color-mix(in oklab, var(--aurora-teal) 40%, transparent) 0%,
+      44% 40% at 64% 2%,
+      color-mix(in oklab, var(--aurora-blue) 28%, transparent) 0%,
       transparent 66%
     ),
     radial-gradient(
-      42% 38% at 64% 4%,
-      color-mix(in oklab, var(--aurora-blue) 26%, transparent) 0%,
-      transparent 66%
-    ),
-    radial-gradient(
-      46% 44% at 100% 0%,
-      color-mix(in oklab, var(--aurora-violet) 24%, transparent) 0%,
+      48% 46% at 100% 0%,
+      color-mix(in oklab, var(--aurora-violet) 26%, transparent) 0%,
       transparent 68%
     );
-  mask-image: linear-gradient(to bottom, #000 0%, #000 34%, transparent 86%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 36%, transparent 88%);
   animation: aurora-drift 26s ease-in-out infinite;
 
   @media (prefers-reduced-motion: reduce) {

@@ -68,9 +68,9 @@ O gradiente da marca aparece em exatamente **três lugares**, e a lista é fecha
 
 Fora daí o gradiente não existe: nem em borda, nem em texto, nem em ícone, nem em faixa de seção. A aurora é o único ponto de cor de marca da página e não se repete abaixo da dobra.
 
-O equilíbrio dos quatro pontos é deliberado: verde e teal carregam o peso (46% / 40%), azul e violeta ficam baixos (26% / 24%). Subir os dois últimos empurra a página direto para o gradiente roxo-azul de template que a `PRODUCT.md` lista como anti-referência.
+O equilíbrio dos quatro pontos é deliberado: verde e teal carregam o peso (52% / 46%), azul e violeta ficam baixos (28% / 26%). Subir os dois últimos empurra a página direto para o gradiente roxo-azul de template que a `PRODUCT.md` lista como anti-referência. A proporção entre eles é que segura a regra — se a aurora for reforçada de novo, os quatro sobem juntos, nunca só os dois de baixo.
 
-Contraste sobre a aurora foi medido, não estimado: pior caso de `ink-700` em 7,69:1, `ink-900` em 14,31:1.
+Contraste sobre a aurora foi medido, não estimado, e remedido depois do reforço: 128 nós de texto na página, nenhum abaixo de AA.
 
 ## Typography
 
@@ -85,6 +85,7 @@ Fraunces e Inter estão na lista de reflexo do register brand, mas a escolha é 
 
 | Token | Valor | Tracking |
 |---|---|---|
+| `--text-hero` | `clamp(2.5rem, 6.4vw, 5rem)` | `-0.04em`, lh 0.98 |
 | `--text-display` | `clamp(2.5rem, 5vw, 4rem)` | `-0.035em`, lh 1.02 |
 | `--text-h2` | `clamp(1.875rem, 3.2vw, 2.875rem)` | `-0.025em`, lh 1.08 |
 | `--text-h3` | `clamp(1.375rem, 1.9vw, 1.75rem)` | `-0.015em` |
@@ -114,7 +115,7 @@ Para matrizes (Benefícios), a grade usa `gap: 1px` sobre `bg-border` com as cé
 - `ui/Pill.astro`, `ui/SectionHeading.astro` (eyebrow com filete + h2 + slot `lead`).
 - `ui/Logo.astro` — logograma em SVG com o gradiente da marca. Sem texto: a palavra "Ache Você" é composta em Fraunces ao lado, nunca desenhada.
 - `ui/Screenshot.astro` — moldura de janela para telas de seção: filete, raio 20px, barra superior com três pontos em areia, `--shadow-lift`. Sempre com `alt` descritivo.
-- `ui/ProductFrame.astro` — moldura maior do hero: `--radius-frame`, `--shadow-frame`, recorte `aspect-square` no mobile e `1586/630` a partir de `sm`. O zoom do mobile é `transform: scale()`, **nunca `min-width`**: largura intrínseca vaza para o viewport de layout mesmo dentro de `overflow-hidden`; transform é só pintura.
+- `ui/ProductFrame.astro` — moldura maior do hero: `--radius-frame`, `--shadow-frame`, recorte `aspect-square` no mobile e `1586/630` a partir de `sm`. A barra superior é só o rótulo do endereço alinhado à esquerda sobre `sand-200`, com filete embaixo. Os três pontos de janela saíram: imitação de macOS lê como mockup, e o argumento aqui é a tela real. O zoom do mobile é `transform: scale()`, **nunca `min-width`**: largura intrínseca vaza para o viewport de layout mesmo dentro de `overflow-hidden`; transform é só pintura.
 - `motion/Reveal.tsx`, `motion/LineReveal.tsx` — ilhas React com `motion`, hidratação `client:visible`. **O hero não tem ilha nenhuma:** acima da dobra não roda React. `motion/HeroScreen.tsx` e `motion/HeroVisual.tsx` foram removidos.
 
 ## Motion
@@ -139,9 +140,13 @@ A pílula é o **único** blur da página, e é o blur permitido: o header fica 
 
 A moldura entra inclinada (`rotateX(9deg)`, `scale(0.94)`) e endireita **uma vez, no load**, em CSS puro. Não é mais atrelada ao scroll: aquilo exigia uma ilha React escrevendo transform a cada quadro sobre o maior elemento da página. A `perspective` mora dentro do próprio `@keyframes`, nunca no pai — no pai ela deixa um contexto 3D permanente em volta do screenshot e da sombra de 90px. O glow é estático, feito de radiais com borda suave em vez de `filter: blur()`.
 
-O título ocupa a largura inteira do container e compõe em **duas linhas** a partir de `lg`. Isso é estrutural, não estético: com o título em coluna estreita ele quebrava em quatro linhas, o bloco de texto passava do `min-height` e a dobra deixava de ser controlável pelo token.
+O título é o objeto principal da dobra e roda em `--text-hero`, uma linha por span, largura cheia do container. Medido em 1440, 1280 e 1024: cada linha ocupa exatamente a largura do container sem quebrar. O teto de `5rem` e o fator `6.4vw` existem para isso — subir qualquer um dos dois quebra a linha 2 (`salva o orçamento de outro.`, a mais longa) em duas e derruba a composição.
 
-O bloco de texto do hero tem `min-height: max(28rem, 66svh)` para que a moldura seja cortada pela dobra. Medido: **48% visível a 900px** de altura, 60% a 1080px, 36% a 800px. O fator `66svh` é o que amarra isso — mexer nele muda quanto da tela aparece, e o valor só vale enquanto o título couber em duas linhas.
+Ordem da dobra: eyebrow, título, e logo abaixo a linha de lead + CTA. O ar sobra **embaixo** do CTA, não entre o título e o lead — com `mt-auto` empurrando a linha para o fim do bloco, o vão do meio lia como buraco, não como respiro.
+
+O bloco de texto do hero tem `min-height: max(31rem, 74svh)` para que a moldura seja cortada pela dobra. Medido: **36% da moldura visível a 900px** de altura, 45% a 1080px, 31% a 800px, 44% no mobile. O fator `74svh` é o que amarra isso — mexer nele muda quanto da tela aparece, e o valor só vale enquanto o título couber em duas linhas.
+
+A lista de prova saiu da dobra e virou uma faixa de filete abaixo da moldura (grade `gap: 1px` sobre `bg-border`). Ela tem só `border-t`: a seção seguinte já desenha a própria borda de topo, e as duas juntas rendiam uma linha de 2px.
 
 ### Sticky de "Como funciona"
 

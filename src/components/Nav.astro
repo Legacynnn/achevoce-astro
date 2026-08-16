@@ -4,9 +4,9 @@ import Button from './ui/Button.astro';
 import Logo from './ui/Logo.astro';
 ---
 
-<header id="site-nav" data-state="hero" class="fixed inset-x-0 top-0 z-50">
+<header id="site-nav" data-state="hero" class="fixed inset-x-0 top-0 z-50 overflow-x-clip pt-[var(--safe-top)]">
   <div class="container-wide">
-    <div class="nav-shell relative flex items-center justify-between gap-6">
+    <div class="nav-shell relative flex items-center justify-between gap-4 sm:gap-6">
       <div class="nav-pill" aria-hidden="true"></div>
 
       <a
@@ -98,7 +98,7 @@ import Logo from './ui/Logo.astro';
 
 <style>
   .nav-shell {
-    height: var(--header-h);
+    height: var(--header-bar);
   }
 
   .nav-pill {
@@ -110,7 +110,7 @@ import Logo from './ui/Logo.astro';
     background: color-mix(in oklab, var(--color-bg) 92%, transparent);
     box-shadow: var(--shadow-soft);
     opacity: 0;
-    transform: scale(1.05) translateY(-0.5rem);
+    transform: scale(1.02) translateY(-0.5rem);
     transition:
       opacity 0.5s var(--ease-out-expo),
       transform 0.6s var(--ease-out-expo);
@@ -172,7 +172,7 @@ import Logo from './ui/Logo.astro';
 
   .nav-menu {
     width: 100%;
-    max-width: none;
+    max-width: 100%;
     height: 100%;
     max-height: none;
     margin: 0;
@@ -196,7 +196,8 @@ import Logo from './ui/Logo.astro';
   .nav-menu-panel {
     background: var(--color-bg);
     border-bottom: 1px solid var(--color-border);
-    padding-bottom: 2.5rem;
+    padding-top: var(--safe-top);
+    padding-bottom: max(2.5rem, var(--safe-bottom));
     opacity: 0;
     transform: translateY(-1.5rem);
     transition:
