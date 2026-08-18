@@ -1,0 +1,23 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+import { acompanha } from '../../data/content.ts';
+---
+
+<section class="section">
+  <div class="container-page">
+    <SectionHeading eyebrow={acompanha.eyebrow} eyebrowIcon={acompanha.eyebrowIcon} title={acompanha.title}>
+      {acompanha.lead}
+    </SectionHeading>
+
+    <div class="mt-14 grid gap-px border-y border-border bg-border sm:grid-cols-2">
+      {
+        acompanha.tiles.map((t, i) => (
+          <div class="reveal bg-bg p-7 sm:p-9" style={`--i:${i}`} data-reveal>
+            <p class="micro text-fg-subtle">{t.label}</p>
+            <p class="measure mt-4 text-fg-muted">{t.body}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

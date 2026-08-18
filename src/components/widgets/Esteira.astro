@@ -1,0 +1,98 @@
+---
+import { Icon } from 'astro-icon/components';
+import ItemThumb from '../ui/ItemThumb.astro';
+
+const cols = [
+  {
+    t: 'Publicado',
+    icon: 'package-sent',
+    items: [
+      { l: 'Soro fisiológico 0,9%', i: 'blood-bag', art: 'frasco' },
+      { l: 'Luva de procedimento M', i: 'glove', art: 'luva' }
+    ]
+  },
+  { t: 'Interesse', icon: 'search-01', items: [{ l: 'Cateter duplo lúmen', i: 'dropper', art: 'cateter' }] },
+  {
+    t: 'Reintegrado',
+    icon: 'checkmark-badge-02',
+    items: [{ l: 'Bomba de infusão', i: 'droplet', art: 'bomba-infusao' }]
+  }
+];
+---
+
+<div class="flex flex-col gap-4">
+  <div class="relative grid grid-cols-3 gap-2">
+    {
+      cols.map((c, ci) => (
+        <div class="flex flex-col gap-2">
+          <p class="micro flex items-center gap-1.5 truncate text-fg-subtle">
+            <Icon
+              name={`hugeicons:${c.icon}`}
+              class:list={['h-3.5 w-3.5 shrink-0', ci === 2 ? 'text-leaf-600' : 'text-violet-600']}
+            />
+            <span class="truncate">{c.t}</span>
+          </p>
+          <div class="flex min-h-28 flex-col gap-2 rounded-field bg-bg-subtle p-2">
+            {c.items.map((it) => (
+              <div class="flex items-center gap-2 rounded-[10px] border border-border bg-bg px-2 py-2">
+                <ItemThumb art={it.art} icon={it.i} size={26} class="!rounded-[7px]" />
+                <p class="min-w-0 text-[0.6875rem] leading-tight text-fg-muted [overflow-wrap:normal]">
+                  {it.l}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+
+    <div
+      class="travel play-inview pointer-events-none absolute bottom-2 left-0 w-[calc((100%-1rem)/3)] px-2"
+      aria-hidden="true"
+      data-reveal
+      data-loop
+    >
+      <div
+        class="flex items-center gap-2 rounded-[10px] border border-violet-300 bg-violet-50 px-2 py-2 shadow-sm"
+      >
+        <ItemThumb art="comprimido" icon="pills-tablet" size={26} class="!rounded-[7px]" />
+        <p class="min-w-0 text-[0.6875rem] leading-tight text-violet-800 [overflow-wrap:normal]">
+          Ondansetrona
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-between border-t border-border pt-3">
+    <span class="micro text-fg-subtle">Esteira de reintegração</span>
+    <span class="flex items-center gap-1.5 text-[0.75rem] text-fg-muted">
+      <span class="h-1.5 w-1.5 rounded-full bg-leaf-500"></span>
+      4 itens ativos
+    </span>
+  </div>
+</div>
+
+<style>
+  @keyframes travel {
+    0%,
+    16% {
+      transform: translate3d(0, 0, 0);
+    }
+    30%,
+    46% {
+      transform: translate3d(calc(100% + 0.5rem), 0, 0);
+    }
+    60%,
+    92% {
+      transform: translate3d(calc(200% + 1rem), 0, 0);
+    }
+    100% {
+      transform: translate3d(200%, 0, 0);
+      opacity: 0;
+    }
+  }
+
+  .travel {
+    animation: travel 7.5s var(--ease-inout) infinite;
+  }
+</style>

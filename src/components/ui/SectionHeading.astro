@@ -1,28 +1,66 @@
 ---
+import Eyebrow from './Eyebrow.astro';
+
 interface Props {
-  eyebrow?: string;
-  align?: 'left' | 'center';
+  eyebrow: string;
+  eyebrowIcon?: string;
+  title: string | string[];
+  tone?: 'light' | 'ink';
+  align?: 'start' | 'center';
   class?: string;
 }
 
-const { eyebrow, align = 'left', class: className = '' } = Astro.props;
+const {
+  eyebrow,
+  eyebrowIcon,
+  title,
+  tone = 'light',
+  align = 'start',
+  class: className = ''
+} = Astro.props;
+
+const lines = Array.isArray(title) ? title : [title];
 ---
 
 <div
   class:list={[
-    'flex flex-col gap-5',
-    align === 'center' && 'mx-auto max-w-3xl items-center text-center',
+    'flex flex-col gap-6',
+    align === 'center' && 'items-center text-center',
     className
   ]}
 >
+  <div class="reveal" data-reveal>
+    <Eyebrow tone={tone} icon={eyebrowIcon}>{eyebrow}</Eyebrow>
+  </div>
+
+  <h2
+    class:list={[
+      'text-h2',
+      tone === 'ink' ? 'text-fg-on-ink' : 'text-fg',
+      align === 'center' && 'max-w-[22ch]'
+    ]}
+  >
+    {
+      lines.map((line, i) => (
+        <span class="line-mask" data-reveal style={`--i:${i}`}>
+          <span>{line}</span>
+        </span>
+      ))
+    }
+  </h2>
+
   {
-    eyebrow && (
-      <span class="eyebrow flex items-center gap-2.5">
-        <span class="h-px w-6 bg-border-strong" aria-hidden="true" />
-        {eyebrow}
-      </span>
+    Astro.slots.has('default') && (
+      <p
+        class:list={[
+          'text-lead measure reveal',
+          tone === 'ink' ? 'text-fg-on-ink-muted' : 'text-fg-muted'
+        ]}
+        style="--i:2"
+        data-reveal
+      >
+        <slot />
+      </p>
     )
   }
-  <h2 class="text-h2"><slot /></h2>
-  <slot name="lead" />
 </div>

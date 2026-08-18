@@ -1,0 +1,89 @@
+---
+import { Icon } from 'astro-icon/components';
+import HospitalMark from '../ui/HospitalMark.astro';
+
+const campos = [
+  { l: 'Razão social', v: 'Hospital de demonstração Ltda.', i: 'building-06' },
+  { l: 'CNPJ', v: '00.000.000/0001-00', i: 'license' },
+  { l: 'CNES', v: '0000000', i: 'document-validation' },
+  { l: 'Município', v: 'Uberlândia · MG', i: 'location-01' },
+  { l: 'Responsável', v: 'Farmácia hospitalar', i: 'user-shield-01' }
+];
+---
+
+<div class="play-inview flex flex-col gap-4" data-reveal>
+  <div class="flex items-start gap-3">
+    <HospitalMark class="h-12 w-12 shrink-0" />
+    <div class="min-w-0 flex-1">
+      <p class="truncate text-[0.9375rem] font-medium text-fg">Hospital de demonstração</p>
+      <p class="flex items-center gap-1.5 text-[0.75rem] text-leaf-600">
+        <svg viewBox="0 0 16 16" class="h-3.5 w-3.5 shrink-0" fill="none" aria-hidden="true">
+          <circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.4"></circle>
+          <path
+            class="check"
+            d="M5 8.2l2.1 2.1L11 6.4"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"></path>
+        </svg>
+        Cadastro validado
+      </p>
+    </div>
+  </div>
+
+  <dl class="flex flex-col">
+    {
+      campos.map((c, i) => (
+        <div
+          class="field-in group/f -mx-2 flex items-center justify-between gap-4 rounded-[10px] border-b border-border px-2 py-2 transition-colors duration-200 last:border-0 hover:bg-bg-subtle"
+          style={`--d:${i * 110}ms`}
+        >
+          <dt class="micro flex shrink-0 items-center gap-2 text-fg-subtle">
+            <span
+              class="grid h-6 w-6 place-items-center rounded-[7px] bg-bg-panel text-fg-subtle transition-colors duration-200 group-hover/f:bg-violet-100 group-hover/f:text-violet-700"
+              aria-hidden="true"
+            >
+              <Icon name={`hugeicons:${c.i}`} class="h-3.5 w-3.5" />
+            </span>
+            {c.l}
+          </dt>
+          <dd class="tnum truncate text-right text-[0.8125rem] text-fg-muted">{c.v}</dd>
+        </div>
+      ))
+    }
+  </dl>
+
+  <p class="text-[0.75rem] text-fg-subtle">Conferido pela equipe antes da liberação do acesso.</p>
+</div>
+
+<style>
+  @keyframes draw {
+    from {
+      stroke-dashoffset: 10;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes field-in {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 8px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .check {
+    stroke-dasharray: 10;
+    animation: draw 0.6s var(--ease-out) 0.5s both;
+  }
+
+  .field-in {
+    animation: field-in 0.55s var(--ease-out) var(--d) both;
+  }
+</style>

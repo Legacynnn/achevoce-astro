@@ -1,0 +1,129 @@
+---
+import { Icon } from 'astro-icon/components';
+import ItemThumb from '../ui/ItemThumb.astro';
+
+const rows = [
+  {
+    item: 'Dipirona 500 mg/mL',
+    qtd: '200 amp.',
+    art: 'ampola',
+    icon: 'injection',
+    st: 'match',
+    label: 'Compatível',
+    onde: 'Curitiba, PR'
+  },
+  {
+    item: 'Bomba de infusão',
+    qtd: '2 un.',
+    art: 'bomba-infusao',
+    icon: 'droplet',
+    st: 'match',
+    label: 'Compatível',
+    onde: 'Ribeirão Preto, SP'
+  },
+  {
+    item: 'Luva de procedimento M',
+    qtd: '20 cx.',
+    art: 'luva',
+    icon: 'glove',
+    st: 'wait',
+    label: 'Em busca',
+    onde: 'sem publicação ainda'
+  },
+  {
+    item: 'Fio de sutura 3-0',
+    qtd: '150 un.',
+    art: 'sutura',
+    icon: 'bandage',
+    st: 'wait',
+    label: 'Em busca',
+    onde: 'sem publicação ainda'
+  }
+];
+---
+
+<div class="flex flex-col gap-4">
+  <div class="flex items-center justify-between gap-3">
+    <p class="flex items-center gap-2 text-[0.8125rem] text-fg-muted">
+      <Icon name="hugeicons:notification-02" class="h-4 w-4 shrink-0 text-violet-600" />
+      Cadastrados pela sua equipe
+    </p>
+    <span class="micro rounded-pill bg-bg-panel px-2 py-1 text-fg-subtle">4 ativos</span>
+  </div>
+
+  <ul class="flex flex-col">
+    {
+      rows.map((r, i) => (
+        <li
+          class="row-in play-inview group/item -mx-2 flex items-center gap-3 rounded-[10px] border-b border-border px-2 py-2.5 transition-colors duration-200 last:border-0 hover:bg-bg-subtle"
+          style={`--d:${i * 150}ms`}
+          data-reveal
+        >
+          <ItemThumb art={r.art} icon={r.icon} size={40} />
+
+          <span class="min-w-0 flex-1">
+            <span class="block truncate text-[0.8125rem] text-fg">{r.item}</span>
+            <span class="tnum flex items-center gap-1.5 text-[0.6875rem] text-fg-subtle">
+              {r.qtd}
+              <span aria-hidden="true">·</span>
+              <span class="truncate">{r.onde}</span>
+            </span>
+          </span>
+
+          <span
+            class:list={[
+              'micro badge-pop flex shrink-0 items-center gap-1.5 rounded-pill px-2 py-1',
+              r.st === 'match' ? 'bg-leaf-600/7 text-leaf-600' : 'bg-bg-panel text-fg-subtle'
+            ]}
+            style={`--d:${i * 150 + 420}ms`}
+          >
+            <Icon
+              name={r.st === 'match' ? 'hugeicons:checkmark-badge-02' : 'hugeicons:clock-04'}
+              class="h-3.5 w-3.5 shrink-0"
+            />
+            {r.label}
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+
+  <p class="text-[0.75rem] text-fg-subtle">
+    O alerta chega para a equipe, não para uma caixa de entrada só.
+  </p>
+</div>
+
+<style>
+  @keyframes row-in {
+    from {
+      opacity: 0;
+      transform: translate3d(-10px, 0, 0);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes badge-pop {
+    0% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    70% {
+      transform: scale(1.06);
+    }
+    100% {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .row-in {
+    animation: row-in 0.6s var(--ease-out) var(--d) both;
+  }
+
+  .badge-pop {
+    animation: badge-pop 0.45s var(--ease-out) var(--d) both;
+  }
+</style>

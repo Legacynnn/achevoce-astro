@@ -1,0 +1,46 @@
+---
+interface Props {
+  colors?: string[];
+  intensity?: 'faint' | 'subtle' | 'medium' | 'bold';
+  speed?: number;
+  blur?: number;
+  count?: number;
+  class?: string;
+}
+
+const ALPHA = { faint: '10%', subtle: '20%', medium: '34%', bold: '52%' } as const;
+
+const {
+  colors = ['color-violet-400', 'color-violet-600', 'color-violet-300'],
+  intensity = 'medium',
+  speed = 28,
+  blur = 90,
+  count = 4,
+  class: className = ''
+} = Astro.props;
+
+const POSES = [
+  { left: '-18%', top: '-30%', w: '78%', h: '118%', anim: 'drift-a', dur: 1, delay: -0.1 },
+  { left: '52%', top: '-24%', w: '74%', h: '112%', anim: 'drift-b', dur: 1.35, delay: -0.55 },
+  { left: '12%', top: '28%', w: '86%', h: '120%', anim: 'drift-c', dur: 0.85, delay: -0.3 },
+  { left: '-12%', top: '34%', w: '62%', h: '108%', anim: 'drift-b', dur: 1.15, delay: -0.75 },
+  { left: '62%', top: '30%', w: '66%', h: '110%', anim: 'drift-a', dur: 1.6, delay: -0.4 }
+];
+
+const blobs = POSES.slice(0, Math.min(5, Math.max(3, count)));
+const alpha = ALPHA[intensity];
+---
+
+<div
+  class:list={['mesh', className]}
+  aria-hidden="true"
+  style={`--mesh-blur:${blur}px`}
+>
+  {
+    blobs.map((p, i) => (
+      <i
+        style={`left:${p.left};top:${p.top};width:${p.w};height:${p.h};background:radial-gradient(closest-side, color-mix(in oklab, var(--${colors[i % colors.length]}) ${alpha}, transparent), transparent);--blob-anim:${p.anim};--blob-dur:calc(${speed}s * ${p.dur});--blob-delay:calc(${speed}s * ${p.delay})`}
+      />
+    ))
+  }
+</div>

@@ -1,0 +1,43 @@
+---
+import { seq } from '../../lib/seq';
+interface Props {
+  opacity?: number;
+  frequency?: number;
+  animated?: boolean;
+  blend?: 'normal' | 'overlay' | 'soft-light';
+  class?: string;
+}
+
+const {
+  opacity = 0.14,
+  frequency = 0.82,
+  animated = false,
+  blend = 'normal',
+  class: className = ''
+} = Astro.props;
+
+const id = `grain-${seq()}`;
+---
+
+<div
+  class:list={['grain', className]}
+  aria-hidden="true"
+  style={`--grain-opacity:${opacity};mix-blend-mode:${blend}`}
+>
+  <svg
+    class="absolute -left-[6%] -top-[6%] h-[112%] w-[112%]"
+    style={animated ? 'animation: grain-jitter 0.6s steps(1) infinite' : undefined}
+  >
+    <defs>
+      <filter id={id}>
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency={frequency}
+          numOctaves="3"
+          stitchTiles="stitch"></feTurbulence>
+        <feColorMatrix type="saturate" values="0"></feColorMatrix>
+      </filter>
+    </defs>
+    <rect width="100%" height="100%" filter={`url(#${id})`}></rect>
+  </svg>
+</div>

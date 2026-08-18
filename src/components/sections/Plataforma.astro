@@ -1,56 +1,75 @@
 ---
-import { plataforma } from '../../data/content';
 import SectionHeading from '../ui/SectionHeading.astro';
-import Screenshot from '../ui/Screenshot.astro';
-import Reveal from '../motion/Reveal';
-import favoritos from '../../assets/screens/favoritos.png';
-import minhaEmpresa from '../../assets/screens/minha-empresa.png';
+import WidgetFrame from '../ui/WidgetFrame.astro';
+import Esteira from '../widgets/Esteira.astro';
+import Validade from '../widgets/Validade.astro';
+import Alertas from '../widgets/Alertas.astro';
+import Ficha from '../widgets/Ficha.astro';
+import { plataforma } from '../../data/content.ts';
 
-const shots = [favoritos, minhaEmpresa];
+const skins = ['violet', 'ember', 'leaf', 'ink'] as const;
+
+const labels: Record<string, string> = {
+  esteira: 'Esteira de publicações',
+  gauge: 'Painel de validade',
+  alertas: 'Interesses e alertas',
+  ficha: 'Cadastro da instituição'
+};
 ---
 
 <section id="plataforma" class="section">
   <div class="container-page">
-    <Reveal client:visible>
-      <SectionHeading eyebrow={plataforma.eyebrow} class="max-w-3xl">
-        {plataforma.title}
-        <p slot="lead" class="max-w-2xl text-lead text-fg-muted">{plataforma.lead}</p>
-      </SectionHeading>
-    </Reveal>
+    <SectionHeading eyebrow={plataforma.eyebrow} eyebrowIcon={plataforma.eyebrowIcon} title={plataforma.title}>
+      {plataforma.lead}
+    </SectionHeading>
 
-    <ol class="mt-12 flex flex-col gap-16 sm:mt-16 sm:gap-20 md:mt-20 md:gap-28">
+    <div class="mt-20 flex flex-col gap-24 lg:gap-32">
       {
-        plataforma.items.map((item, i) => (
-          <li class="grid items-center gap-8 lg:grid-cols-12 lg:gap-16">
-            <Reveal
-              client:visible
-              preset="scale"
-              amount={0.25}
-              className={i % 2 === 1 ? 'lg:col-span-7 lg:col-start-6' : 'lg:col-span-7'}
-            >
-              <Screenshot src={shots[i]} alt={item.alt} sizes="(min-width: 1024px) 54vw, 92vw" />
-            </Reveal>
-
-            <Reveal
-              client:visible
-              delay={0.08}
-              className={
-                i % 2 === 1
-                  ? 'lg:col-span-4 lg:col-start-1 lg:row-start-1'
-                  : 'lg:col-span-4 lg:col-start-9'
-              }
-            >
-              <div>
-                <span class="numeral block text-[1.5rem] leading-none text-ghost">
-                  {String(i + 1).padStart(2, '0')}
+        plataforma.rows.map((row, i) => (
+          <div
+            class:list={[
+              'grid items-center gap-10 lg:gap-14',
+              i % 2 === 1
+                ? 'lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:[&>*:first-child]:order-2'
+                : 'lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]'
+            ]}
+          >
+            <div class="min-w-0 max-w-lg">
+              <div class="reveal flex items-center gap-3" data-reveal>
+                <span class="micro grid h-8 w-8 place-items-center rounded-pill bg-violet-600 text-cta-fg">
+                  {row.n}
                 </span>
-                <h3 class="mt-4 text-h3">{item.title}</h3>
-                <p class="mt-4 text-fg-muted">{item.body}</p>
+                <span class="micro rounded-pill bg-violet-100 px-2.5 py-1.5 text-violet-800">
+                  {row.tag}
+                </span>
               </div>
-            </Reveal>
-          </li>
+
+              <h3 class="text-h2 mt-6 text-fg">
+                <span class="line-mask" data-reveal>
+                  <span>{row.title}</span>
+                </span>
+              </h3>
+
+              <p class="reveal measure mt-5 text-fg-muted" style="--i:1" data-reveal>
+                {row.body}
+              </p>
+            </div>
+
+            <div class="reveal min-w-0" data-reveal>
+              <WidgetFrame
+                label={labels[row.widget]}
+                tilt={i % 2 === 1 ? 'right' : 'left'}
+                skin={skins[i % skins.length]}
+              >
+                {row.widget === 'esteira' && <Esteira />}
+                {row.widget === 'gauge' && <Validade />}
+                {row.widget === 'alertas' && <Alertas />}
+                {row.widget === 'ficha' && <Ficha />}
+              </WidgetFrame>
+            </div>
+          </div>
         ))
       }
-    </ol>
+    </div>
   </div>
 </section>

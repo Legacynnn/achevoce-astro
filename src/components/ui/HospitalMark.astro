@@ -1,0 +1,55 @@
+---
+import { seq } from '../../lib/seq';
+interface Props {
+  class?: string;
+}
+
+const { class: extra = '' } = Astro.props;
+const id = `hospital-mark-fill-${seq()}`;
+---
+
+<svg viewBox="0 0 48 48" class:list={['block', extra]} role="img" aria-label="Marca da instituição de demonstração">
+  <defs>
+    <linearGradient id={id} x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="var(--color-violet-500)"></stop>
+      <stop offset="100%" stop-color="var(--color-violet-800)"></stop>
+    </linearGradient>
+  </defs>
+
+  <rect width="48" height="48" rx="14" fill={`url(#${id})`}></rect>
+
+  <circle
+    class="ring"
+    cx="24"
+    cy="24"
+    r="14.5"
+    fill="none"
+    stroke="oklch(1 0 0 / 0.32)"
+    stroke-width="1.4"
+    stroke-linecap="round"
+    stroke-dasharray="46 45"></circle>
+
+  <path
+    d="M13.5 34.5V23H18V13.5h12V23h4.5v11.5h-8.8v-5.3q-1.7-1.9-3.4 0v5.3zM22.5 14.9h3v1.9h1.9v3h-1.9v1.9h-3v-1.9h-1.9v-3h1.9z"
+    fill="oklch(0.99 0.006 302)"
+    fill-rule="evenodd"></path>
+</svg>
+
+<style>
+  @keyframes ring-turn {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .ring {
+    transform-origin: 50% 50%;
+    animation: ring-turn 18s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ring {
+      animation: none;
+    }
+  }
+</style>

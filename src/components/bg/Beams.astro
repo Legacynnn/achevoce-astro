@@ -1,0 +1,60 @@
+---
+interface Props {
+  count?: number;
+  angle?: number;
+  speed?: number;
+  intensity?: 'subtle' | 'medium' | 'bold';
+  colors?: string[];
+  class?: string;
+}
+
+const TIER = {
+  subtle: { beam: '18%', wash: '7%' },
+  medium: { beam: '30%', wash: '11%' },
+  bold: { beam: '46%', wash: '16%' }
+} as const;
+
+const {
+  count = 6,
+  angle = 14,
+  speed = 11,
+  intensity = 'medium',
+  colors = ['color-violet-400', 'color-violet-300', 'color-violet-500'],
+  class: className = ''
+} = Astro.props;
+
+const hash = (n: number, salt: number) => {
+  let h = (n + 1) * 2654435761 + salt * 40503;
+  h ^= h >>> 13;
+  return Math.abs(h % 1000) / 1000;
+};
+
+const tier = TIER[intensity];
+const step = 100 / count;
+
+const beams = Array.from({ length: count }, (_, i) => {
+  const token = colors[i % colors.length];
+  return {
+    left: (i * step + hash(i, 7) * step * 0.5 - step * 0.15).toFixed(2),
+    width: (4 + hash(i, 19) * 7).toFixed(2),
+    dur: (0.75 + hash(i, 31) * 0.8).toFixed(2),
+    delay: (-hash(i, 53) * 2.4).toFixed(2),
+    token
+  };
+});
+---
+
+<div class:list={['beams', className]} aria-hidden="true">
+  <div
+    class="absolute inset-x-0 top-0 h-[22%]"
+    style={`background:linear-gradient(to bottom, color-mix(in oklab, var(--${colors[0]}) ${tier.wash}, transparent), transparent)`}
+  >
+  </div>
+  {
+    beams.map((b) => (
+      <i
+        style={`left:${b.left}%;width:${b.width}%;transform:skewX(${angle}deg);background:linear-gradient(to bottom, color-mix(in oklab, var(--${b.token}) ${tier.beam}, transparent), transparent 92%);--beam-dur:calc(${speed}s * ${b.dur});--beam-delay:calc(${speed}s * ${b.delay})`}
+      />
+    ))
+  }
+</div>

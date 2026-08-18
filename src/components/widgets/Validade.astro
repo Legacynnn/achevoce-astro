@@ -1,0 +1,138 @@
+---
+const total = 190;
+const risco = 44;
+const pct = Math.round((risco / total) * 100);
+
+const buckets = [
+  { ate: 10, n: 1 },
+  { ate: 20, n: 2 },
+  { ate: 30, n: 3 },
+  { ate: 40, n: 3 },
+  { ate: 50, n: 3 },
+  { ate: 60, n: 5 },
+  { ate: 70, n: 7 },
+  { ate: 80, n: 9 },
+  { ate: 90, n: 11 }
+];
+
+const teto = 12;
+const janelas = [
+  { l: 'Até 30 dias', n: 6, tom: 'bg-rust-600' },
+  { l: '31 a 60 dias', n: 11, tom: 'bg-violet-600' },
+  { l: '61 a 90 dias', n: 27, tom: 'bg-violet-400' }
+];
+
+const tom = (ate: number) =>
+  ate <= 30 ? 'bg-rust-600' : ate <= 60 ? 'bg-violet-600' : 'bg-violet-400';
+---
+
+<div class="play-inview flex flex-col gap-5" data-reveal>
+  <div class="flex items-end justify-between gap-4">
+    <div class="min-w-0">
+      <p class="micro text-fg-subtle">Estoque disponível em risco</p>
+      <p class="text-stat tnum mt-1 text-fg">
+        <span data-count={pct} data-suffix="%">{pct}%</span>
+      </p>
+    </div>
+    <p class="tnum shrink-0 text-right text-[0.8125rem] text-fg-muted">
+      {risco} de {total} itens<br />
+      <span class="text-fg-subtle">vencem em até 90 dias</span>
+    </p>
+  </div>
+
+  <div class="flex h-1.5 gap-0.5 overflow-hidden rounded-pill" role="presentation">
+    <span
+      class="grow-x block h-full shrink-0 rounded-pill bg-violet-600"
+      style={`--w:${pct}%;--d:200ms`}
+     ></span>
+    <span class="block h-full flex-1 rounded-pill bg-bg-panel"></span>
+  </div>
+
+  <figure class="m-0">
+    <figcaption class="sr-only">
+      Itens do estoque de demonstração por dias restantes até o vencimento, em faixas de dez dias.
+    </figcaption>
+
+    <div class="plot relative h-32">
+      <div class="pointer-events-none absolute inset-0 flex" aria-hidden="true">
+        <span class="h-full flex-1 bg-rust-600/[0.045]"></span>
+        <span class="h-full flex-1 bg-violet-600/[0.04]"></span>
+        <span class="h-full flex-1"></span>
+      </div>
+
+      <div class="pointer-events-none absolute inset-0 flex flex-col justify-between" aria-hidden="true">
+        {[0, 1, 2, 3].map(() => <span class="block h-px w-full bg-border"></span>)}
+      </div>
+
+      <ul class="relative flex h-full items-end gap-[3px]">
+        {
+          buckets.map((b, i) => (
+            <li class="group/b relative flex h-full flex-1 items-end">
+              <span
+                class:list={[
+                  'grow-y block w-full rounded-t-[4px] transition-opacity duration-200 group-hover/b:opacity-100',
+                  tom(b.ate),
+                  'opacity-85'
+                ]}
+                style={`--h:${(b.n / teto) * 100}%;--d:${i * 70}ms`}
+              />
+              <span class="tip micro pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 rounded-[8px] bg-fg px-2 py-1 whitespace-nowrap text-bg opacity-0 shadow-md transition-opacity duration-200 group-hover/b:opacity-100">
+                {b.ate - 9}–{b.ate} d · {b.n}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="tnum mt-2 flex justify-between text-[0.6875rem] text-fg-subtle" aria-hidden="true">
+      <span>hoje</span>
+      <span>30 d</span>
+      <span>60 d</span>
+      <span>90 d</span>
+    </div>
+  </figure>
+
+  <ul class="flex flex-wrap gap-x-5 gap-y-2 border-t border-border pt-3">
+    {
+      janelas.map((j) => (
+        <li class="flex items-center gap-2 text-[0.75rem] text-fg-subtle">
+          <span class:list={['h-2 w-2 shrink-0 rounded-[3px]', j.tom]} aria-hidden="true" />
+          {j.l}
+          <span class="tnum font-medium text-fg-muted">{j.n}</span>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  @keyframes grow-y {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--h);
+    }
+  }
+
+  @keyframes grow-x {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  .grow-y {
+    height: var(--h);
+    animation: grow-y 0.9s var(--ease-out) var(--d) both;
+  }
+
+  .grow-x {
+    width: var(--w);
+    transform-origin: left;
+    animation: grow-x 1s var(--ease-out) var(--d) both;
+  }
+</style>

@@ -1,0 +1,40 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+import { seguranca } from '../../data/content.ts';
+---
+
+<section id="seguranca" class="section bg-bg-subtle">
+  <div class="container-page">
+    <SectionHeading eyebrow={seguranca.eyebrow} eyebrowIcon={seguranca.eyebrowIcon} title={seguranca.title} />
+
+    <div class="mt-14 grid gap-10 lg:grid-cols-2 lg:gap-16">
+      <div>
+        <p class="micro border-b border-border pb-4 text-violet-800">O que a plataforma faz</p>
+        <ul class="mt-6 flex flex-col gap-6">
+          {
+            seguranca.faz.map((p, i) => (
+              <li class="reveal measure text-fg-muted" style={`--i:${i}`} data-reveal>
+                {p}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div>
+        <p class="micro border-b border-border pb-4 text-fg-subtle">
+          O que ela não faz
+        </p>
+        <ul class="mt-6 flex flex-col gap-6">
+          {
+            seguranca.naoFaz.map((p, i) => (
+              <li class="reveal measure text-fg-muted" style={`--i:${i}`} data-reveal>
+                {p}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

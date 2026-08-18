@@ -1,47 +1,56 @@
 ---
 interface Props {
   href: string;
-  variant?: 'cta' | 'ghost' | 'quiet';
+  variant?: 'cta' | 'ghost' | 'ghost-ink' | 'quiet';
   size?: 'md' | 'lg';
   class?: string;
+  external?: boolean;
 }
 
-const { href, variant = 'cta', size = 'md', class: className = '' } = Astro.props;
-const isExternal = href.startsWith('http');
+const {
+  href,
+  variant = 'cta',
+  size = 'md',
+  class: className = '',
+  external = false
+} = Astro.props;
 
 const base =
-  'group inline-flex min-h-11 items-center justify-center gap-2 rounded-pill font-medium whitespace-nowrap transition duration-300 ease-out-expo [touch-action:manipulation]';
-
-const variants = {
-  cta: 'bg-cta text-cta-fg shadow-soft hover:bg-cta-hover hover:-translate-y-0.5 hover:shadow-lift active:translate-y-0',
-  ghost:
-    'border border-border-strong text-fg hover:border-fg hover:bg-bg-raised hover:-translate-y-0.5',
-  quiet: 'text-fg underline decoration-border-strong underline-offset-6 hover:decoration-fg'
-};
+  'group relative inline-flex items-center gap-2 rounded-pill font-medium transition-[transform,box-shadow,background-color,border-color,color] duration-300 ease-[var(--ease-out)] active:translate-y-px';
 
 const sizes = {
-  md: 'px-5 py-2.5 text-[0.9375rem]',
-  lg: 'px-7 py-3.5 text-base'
+  md: 'h-11 px-5 text-[0.9375rem]',
+  lg: 'h-13 px-7 text-base'
 };
+
+const variants = {
+  cta: 'bg-cta text-cta-fg shadow-md hover:bg-cta-hover hover:shadow-lg hover:-translate-y-0.5',
+  ghost:
+    'border border-border-strong bg-transparent text-fg hover:border-fg hover:-translate-y-0.5',
+  'ghost-ink':
+    'border border-border-ink-strong bg-transparent text-fg-on-ink hover:border-fg-on-ink hover:bg-white/5 hover:-translate-y-0.5',
+  quiet: 'px-0 text-fg underline decoration-border-strong underline-offset-[6px] hover:decoration-fg'
+};
+
+const attrs = external ? { target: '_blank', rel: 'noopener' } : {};
 ---
 
 <a
   href={href}
-  class:list={[base, variants[variant], variant === 'quiet' ? '' : sizes[size], className]}
-  target={isExternal ? '_blank' : undefined}
-  rel={isExternal ? 'noopener' : undefined}
+  class:list={[base, sizes[size], variants[variant], className]}
+  {...attrs}
 >
-  <slot />
+  <span><slot /></span>
   {
     variant !== 'quiet' && (
       <svg
-        class="size-4 transition-transform duration-300 ease-out-expo group-hover:translate-x-0.5"
         viewBox="0 0 16 16"
+        class="h-4 w-4 shrink-0 transition-transform duration-300 ease-[var(--ease-out)] group-hover:translate-x-1"
         fill="none"
         aria-hidden="true"
       >
         <path
-          d="M3 8h10m0 0-4-4m4 4-4 4"
+          d="M3 8h9m0 0L8.5 4.5M12 8l-3.5 3.5"
           stroke="currentColor"
           stroke-width="1.5"
           stroke-linecap="round"

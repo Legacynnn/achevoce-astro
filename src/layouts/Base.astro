@@ -12,9 +12,7 @@ interface Props {
 
 const { title = SITE.title, description = SITE.description } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE.url).toString();
-const ogImage = SITE.ogImage
-  ? new URL(SITE.ogImage, Astro.site ?? SITE.url).toString()
-  : undefined;
+const ogImage = new URL(SITE.ogImage, Astro.site ?? SITE.url).toString();
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -38,7 +36,7 @@ const jsonLd = {
 
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#faf6ef" />
+    <meta name="theme-color" content="#1b0f2e" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE.name} />
@@ -46,30 +44,26 @@ const jsonLd = {
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    {ogImage && <meta property="og:image" content={ogImage} />}
-    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    {ogImage && <meta name="twitter:image" content={ogImage} />}
+    <meta name="twitter:image" content={ogImage} />
 
-    <Font cssVariable="--font-fraunces" preload />
-    <Font cssVariable="--font-inter-tight" preload />
+    <Font cssVariable="--font-gabarito" preload />
+    <Font cssVariable="--font-schibsted" preload />
+    <Font cssVariable="--font-spline-mono" />
+
+    <script is:inline>
+      document.documentElement.dataset.js = '';
+    </script>
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
-
-    <noscript>
-      <style>
-        astro-island > * {
-          opacity: 1 !important;
-          transform: none !important;
-        }
-      </style>
-    </noscript>
   </head>
   <body>
     <a
       href="#conteudo"
-      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100 focus:rounded-field focus:bg-bg-raised focus:px-4 focus:py-2 focus:text-fg"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100 focus:rounded-field focus:bg-bg focus:px-4 focus:py-2 focus:text-fg focus:shadow-md"
     >
       Ir para o conteúdo
     </a>
@@ -78,5 +72,170 @@ const jsonLd = {
       <slot />
     </main>
     <Footer />
+
+    <script>
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            const el = e.target as HTMLElement;
+            if (e.isIntersecting) {
+              el.dataset.inview = '';
+              if (el.dataset.count) countUp(el);
+              if (!('loop' in el.dataset)) io.unobserve(el);
+            } else if ('loop' in el.dataset) {
+              delete el.dataset.inview;
+            }
+          }
+        },
+        { rootMargin: '0px 0px -12% 0px', threshold: 0.15 }
+      );
+
+      function countUp(el: HTMLElement) {
+        const to = Number(el.dataset.count);
+        const suffix = el.dataset.suffix ?? '';
+        if (!Number.isFinite(to)) return;
+        if (reduce) {
+          el.textContent = `${to}${suffix}`;
+          return;
+        }
+        const dur = 1400;
+        const t0 = performance.now();
+        const tick = (t: number) => {
+          const p = Math.min(1, (t - t0) / dur);
+          const eased = 1 - Math.pow(1 - p, 4);
+          el.textContent = `${Math.round(to * eased)}${suffix}`;
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        el.textContent = `0${suffix}`;
+        requestAnimationFrame(tick);
+      }
+
+      for (const el of document.querySelectorAll<HTMLElement>('[data-reveal], [data-count]')) {
+        io.observe(el);
+      }
+    </script>
+
+    <script>
+      const root = document.documentElement;
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const coarse = matchMedia('(pointer: coarse)').matches;
+      const parallax = [...document.querySelectorAll<HTMLElement>('[data-parallax]')];
+      const tracks = [...document.querySelectorAll<HTMLElement>('[data-track]')];
+
+      type Band = {
+        el: HTMLElement;
+        top: number;
+        span: number;
+        last: number;
+        steps: number;
+        step: number;
+      };
+      let bands: Band[] = [];
+
+      const measure = () => {
+        const y = scrollY;
+        bands = tracks.map((el) => {
+          const r = el.getBoundingClientRect();
+          return {
+            el,
+            top: r.top + y,
+            span: Math.max(1, r.height + innerHeight),
+            last: -1,
+            steps: Number(el.dataset.steps) || 0,
+            step: -1
+          };
+        });
+      };
+
+      let lastP = -1;
+
+      const paint = (progress: number, scroll: number) => {
+        if (Math.abs(progress - lastP) > 0.002) {
+          lastP = progress;
+          root.style.setProperty('--scroll-p', progress.toFixed(4));
+        }
+        if (!reduce) {
+          for (const el of parallax) {
+            const speed = Number(el.dataset.parallax) || 0.1;
+            const y = Math.min(scroll * speed, 120);
+            el.style.transform = `translate3d(0,${y.toFixed(1)}px,0)`;
+          }
+        }
+        for (const b of bands) {
+          const p = (scroll + innerHeight - b.top) / b.span;
+          const c = p < 0 ? 0 : p > 1 ? 1 : p;
+          if (Math.abs(c - b.last) < 0.003) continue;
+          b.last = c;
+          b.el.style.setProperty('--p', c.toFixed(4));
+
+          if (!b.steps) continue;
+          const t = (c - 0.28) / 0.4;
+          const i = Math.floor(t * b.steps);
+          const step = i < 0 ? 0 : i > b.steps - 1 ? b.steps - 1 : i;
+          if (step !== b.step) {
+            b.step = step;
+            b.el.dataset.step = String(step);
+          }
+        }
+      };
+
+      const maxScroll = () => Math.max(1, document.body.scrollHeight - innerHeight);
+
+      if (tracks.length) {
+        measure();
+        paint(scrollY / maxScroll(), scrollY);
+        addEventListener('resize', () => {
+          measure();
+          paint(scrollY / maxScroll(), scrollY);
+        });
+        addEventListener('load', measure);
+        if (document.fonts) document.fonts.ready.then(measure);
+      }
+
+      if (reduce || coarse) {
+        let ticking = false;
+        addEventListener(
+          'scroll',
+          () => {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(() => {
+              paint(scrollY / maxScroll(), scrollY);
+              ticking = false;
+            });
+          },
+          { passive: true }
+        );
+      } else {
+        import('lenis').then(({ default: Lenis }) => {
+          const lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1, syncTouch: false });
+
+          lenis.on('scroll', (e: { progress: number; scroll: number }) =>
+            paint(e.progress, e.scroll)
+          );
+
+          const frame = (time: number) => {
+            lenis.raf(time);
+            requestAnimationFrame(frame);
+          };
+          requestAnimationFrame(frame);
+
+          const headerOffset = () =>
+            -((document.getElementById('site-nav')?.getBoundingClientRect().height ?? 56) + 28);
+
+          document.addEventListener('click', (e) => {
+            const link = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href^="#"]');
+            const id = link?.getAttribute('href');
+            if (!link || !id || id === '#') return;
+            const target = document.querySelector(id);
+            if (!target) return;
+            e.preventDefault();
+            lenis.scrollTo(target as HTMLElement, { offset: headerOffset() });
+          });
+        });
+      }
+    </script>
   </body>
 </html>

@@ -1,39 +1,69 @@
 ---
-import { NAV_LINKS, SITE } from '../lib/site';
-import { footer } from '../data/content';
 import Logo from './ui/Logo.astro';
+import Mesh from './bg/Mesh.astro';
+import Grain from './bg/Grain.astro';
+import { footer, site } from '../data/content.ts';
 
 const year = new Date().getFullYear();
 ---
 
-<footer class="border-t border-border bg-bg-muted pb-[var(--safe-bottom)]">
-  <div class="container-page grid gap-12 py-16 md:grid-cols-[1.4fr_1fr] md:py-20">
-    <div class="max-w-md">
-      <Logo class="w-11" title="Ache Você" />
-      <p class="mt-5 text-[0.9375rem] text-fg-muted">{footer.tagline}</p>
-    </div>
+<footer class="on-ink relative isolate overflow-hidden bg-bg-ink text-fg-on-ink-muted">
+  <Mesh
+    colors={['color-violet-500', 'color-violet-700', 'color-violet-400']}
+    intensity="bold"
+    speed={40}
+    blur={110}
+    count={3}
+  />
+  <Grain opacity={0.1} />
 
-    <nav aria-label="Rodapé" class="flex flex-col md:justify-self-end">
-      <span class="eyebrow mb-2">Navegue</span>
-      {
-        NAV_LINKS.map((link) => (
-          <a
-            href={link.href}
-            class="flex min-h-11 items-center text-[0.9375rem] text-fg-muted transition-colors duration-200 hover:text-fg [touch-action:manipulation]"
+  <div class="container-page relative pt-24 pb-10 sm:pt-32">
+    <div class="grid gap-12 sm:grid-cols-[1.4fr_1fr_1fr]">
+      <div class="max-w-sm">
+        <div class="flex items-center gap-2.5">
+          <Logo class="h-7" />
+          <span
+            class="font-display text-lg font-medium tracking-[-0.02em] whitespace-nowrap text-fg-on-ink"
           >
-            {link.label}
-          </a>
+            Ache Você
+          </span>
+        </div>
+        <p class="mt-4 text-[0.9375rem] leading-relaxed">{footer.tagline}</p>
+      </div>
+
+      {
+        footer.cols.map((col) => (
+          <div>
+            <p class="micro text-fg-on-ink-subtle">{col.title}</p>
+            <ul class="mt-3 flex flex-col">
+              {col.links.map((l) => (
+                <li>
+                  <a
+                    href={l.href}
+                    class="inline-flex min-h-11 items-center text-[0.9375rem] transition-colors duration-200 hover:text-fg-on-ink"
+                  >
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         ))
       }
-    </nav>
-  </div>
+    </div>
 
-  <div class="container-page">
     <div
-      class="flex flex-col gap-2 border-t border-border py-7 text-sm text-fg-subtle sm:flex-row sm:items-center sm:justify-between"
+      class="mt-16 flex flex-col gap-4 border-t border-border-ink pt-6 text-[0.8125rem] text-fg-on-ink-subtle sm:flex-row sm:items-center sm:justify-between"
     >
-      <span>© {year} {SITE.name}. Todos os direitos reservados.</span>
-      <span>Feito para instituições de saúde do Brasil.</span>
+      <p>© {year} {site.name}. Todos os direitos reservados.</p>
+      <p>Plataforma de conexão. A negociação é conduzida pelas instituições.</p>
     </div>
   </div>
+
+  <p
+    class="pointer-events-none relative -mb-[0.18em] select-none px-[var(--page-pad)] text-center font-display text-[clamp(4rem,15vw,13rem)] font-medium leading-[0.8] tracking-[-0.05em] text-white/[0.07]"
+    aria-hidden="true"
+  >
+    Ache Você
+  </p>
 </footer>

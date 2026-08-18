@@ -1,17 +1,18 @@
 ---
+import { seq } from '../../lib/seq';
 interface Props {
   class?: string;
   title?: string;
 }
 
 const { class: className = '', title } = Astro.props;
-const gid = `av-mark-${Math.random().toString(36).slice(2, 8)}`;
+const gid = `av-mark-${seq()}`;
 ---
 
 <svg
   viewBox="0 0 72 52.5"
   xmlns="http://www.w3.org/2000/svg"
-  class:list={['block h-auto', className]}
+  class:list={['block w-auto', className]}
   role={title ? 'img' : undefined}
   aria-label={title}
   aria-hidden={title ? undefined : 'true'}

@@ -1,0 +1,254 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+import ItemThumb from '../ui/ItemThumb.astro';
+import HospitalMark from '../ui/HospitalMark.astro';
+import Mesh from '../bg/Mesh.astro';
+import Grain from '../bg/Grain.astro';
+import { console_ } from '../../data/content.ts';
+
+const { item, origem, destino, eventos, total } = console_;
+
+const gaps = eventos.map((e, i) => (i === 0 ? 0 : Math.pow(e.d - eventos[i - 1].d, 0.62)));
+
+let run = 0;
+const marks = gaps.map((g) => {
+  run += g + 1;
+  return run;
+});
+const span = marks[marks.length - 1] + 0.6;
+---
+
+<section data-ink class="on-ink section relative isolate overflow-hidden bg-bg-ink-deep">
+  <Mesh
+    colors={['color-violet-700', 'color-violet-500', 'color-violet-900']}
+    intensity="subtle"
+    speed={44}
+    blur={120}
+    count={3}
+  />
+  <Grain opacity={0.1} />
+
+  <div class="container-page relative">
+    <SectionHeading
+      eyebrow={console_.eyebrow}
+      eyebrowIcon={console_.eyebrowIcon}
+      title={console_.title}
+      tone="ink"
+    >
+      {console_.lead}
+    </SectionHeading>
+
+    <div
+      class="mt-14 grid gap-x-[clamp(3rem,6vw,6rem)] gap-y-12 lg:mt-20 lg:grid-cols-[minmax(0,17.5rem)_minmax(0,1fr)]"
+    >
+      <aside class="reveal" data-reveal>
+        <figure class="flex items-center gap-5 lg:block">
+          <ItemThumb art={item.art} icon={item.icon} size={88} />
+          <figcaption class="min-w-0 lg:mt-5">
+            <p class="font-display text-[1.375rem] leading-tight tracking-[-0.028em] text-fg-on-ink">
+              {item.nome}
+            </p>
+            <p class="tnum mt-1 text-[0.875rem] text-fg-on-ink-muted">{item.detalhe}</p>
+            <p class="tnum mt-1 text-[0.8125rem] text-fg-on-ink-subtle">{item.validade}</p>
+          </figcaption>
+        </figure>
+
+        <dl class="mt-9">
+          <div class="hop">
+            <HospitalMark class="h-7 w-7 shrink-0 rounded-[9px]" />
+            <div class="min-w-0">
+              <dt class="micro text-fg-on-ink-subtle">{origem.label}</dt>
+              <dd class="mt-1 text-[0.875rem] text-fg-on-ink">{origem.inst}</dd>
+              <dd class="text-[0.8125rem] text-fg-on-ink-subtle">{origem.onde}</dd>
+            </div>
+          </div>
+          <div class="hop">
+            <HospitalMark class="h-7 w-7 shrink-0 rounded-[9px]" />
+            <div class="min-w-0">
+              <dt class="micro text-fg-on-ink-subtle">{destino.label}</dt>
+              <dd class="mt-1 text-[0.875rem] text-fg-on-ink">{destino.inst}</dd>
+              <dd class="text-[0.8125rem] text-fg-on-ink-subtle">{destino.onde}</dd>
+            </div>
+          </div>
+        </dl>
+
+        <p class="mt-9 flex items-baseline gap-2.5 border-t border-white/10 pt-7">
+          <span
+            class="tnum font-display text-[2.75rem] leading-none tracking-[-0.04em] text-fg-on-ink"
+          >
+            {total.n}
+          </span>
+          <span class="text-[1.0625rem] text-fg-on-ink">{total.unit}</span>
+          <span class="text-[0.875rem] text-fg-on-ink-subtle">{total.label}</span>
+        </p>
+        <p class="micro mt-3 text-fg-on-ink-subtle">{console_.demo}</p>
+      </aside>
+
+      <ol class="rec reveal" data-reveal data-track>
+        {
+          eventos.map((e, i) => (
+            <li class="ev" style={`--at:${(marks[i] / span).toFixed(4)};--g:${gaps[i].toFixed(3)}`}>
+              {e.espera && (
+                <span class="wait">
+                  <span class="tnum font-mono text-[0.6875rem] text-fg-on-ink-subtle">
+                    {e.d - eventos[i - 1].d} dias
+                  </span>
+                  <span class="text-[0.75rem] text-fg-on-ink-subtle">{e.espera}</span>
+                </span>
+              )}
+
+              <p class="tnum dia font-mono text-[0.75rem] text-fg-on-ink-subtle">{e.dia}</p>
+              <h3 class="font-display text-[1.25rem] leading-tight tracking-[-0.028em] text-fg-on-ink">
+                {e.label}
+              </h3>
+              <p class="mt-2 max-w-[46ch] text-[0.9375rem] leading-relaxed text-fg-on-ink-muted">
+                {e.title}
+              </p>
+              <p class="tnum mt-2.5 font-mono text-[0.6875rem] leading-snug text-fg-on-ink-subtle">
+                {e.meta}
+              </p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hop {
+    position: relative;
+    display: flex;
+    gap: 0.875rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .hop:last-child {
+    padding-bottom: 0;
+  }
+
+  .hop:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    top: 2.25rem;
+    bottom: 0.5rem;
+    left: 0.8125rem;
+    width: 1px;
+    background: repeating-linear-gradient(
+      to bottom,
+      oklch(1 0 0 / 0.22) 0 2px,
+      transparent 2px 7px
+    );
+  }
+
+  .rec {
+    --u: 2.25rem;
+    --fill: 1;
+    position: relative;
+    padding-left: 2.25rem;
+  }
+
+  html[data-js] .rec {
+    --fill: clamp(0, (var(--p, 0) - 0.2) / 0.36, 1);
+  }
+
+  .rec::before,
+  .rec::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 0.4rem;
+    width: 1px;
+  }
+
+  .rec::before {
+    bottom: 1rem;
+    background: repeating-linear-gradient(
+      to bottom,
+      oklch(1 0 0 / 0.22) 0 2px,
+      transparent 2px 7px
+    );
+  }
+
+  .rec::after {
+    height: calc((100% - 1.4rem) * var(--fill));
+    background: linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--color-violet-500) 60%, transparent),
+      var(--color-violet-300)
+    );
+  }
+
+  .ev {
+    --on: clamp(0, (var(--fill) - var(--at)) * 26, 1);
+    position: relative;
+    opacity: calc(0.66 + 0.34 * var(--on));
+    transition: opacity 0.5s var(--ease-out);
+  }
+
+  .ev + .ev {
+    margin-top: calc(2rem + var(--u) * var(--g));
+  }
+
+  .wait {
+    position: absolute;
+    top: calc(var(--u) * var(--g) / -2 - 1rem);
+    left: 0;
+    display: grid;
+    gap: 0.15rem;
+    max-width: 30ch;
+    transform: translateY(-50%);
+  }
+
+  .dia {
+    margin-bottom: 0.5rem;
+  }
+
+  @media (width >= 40rem) {
+    .rec {
+      --u: 3rem;
+      padding-left: 6.25rem;
+    }
+
+    .dia {
+      position: absolute;
+      top: 0.15rem;
+      left: -4rem;
+      width: 3.25rem;
+      margin-bottom: 0;
+      text-align: right;
+    }
+
+    .wait {
+      left: -4rem;
+      grid-template-columns: 3.25rem minmax(0, 1fr);
+      align-items: baseline;
+      gap: 0.75rem;
+      max-width: none;
+    }
+
+    .wait > :first-child {
+      text-align: right;
+    }
+  }
+
+  @media (hover: hover) {
+    .ev:hover {
+      opacity: 1;
+    }
+  }
+
+  html:not([data-js]) .ev {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rec {
+      --fill: 1 !important;
+    }
+
+    .ev {
+      transition: none;
+    }
+  }
+</style>

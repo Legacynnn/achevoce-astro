@@ -1,0 +1,220 @@
+---
+import { Image } from 'astro:assets';
+import SectionHeading from '../ui/SectionHeading.astro';
+import { publico } from '../../data/content.ts';
+import farmaceutico from '../../assets/photos/farmaceutico.jpg';
+---
+
+<section id="publico" class="section bg-bg-subtle">
+  <div class="container-page">
+    <SectionHeading eyebrow={publico.eyebrow} eyebrowIcon={publico.eyebrowIcon} title={publico.title} />
+
+    <div class="reveal mt-14 grid gap-8 lg:grid-cols-[minmax(0,17rem)_1fr] lg:gap-14" data-reveal>
+      <div class="flex min-w-0 flex-col gap-6">
+        <figure
+          class="relative hidden overflow-hidden rounded-card ring-1 ring-border ring-inset lg:block"
+        >
+          <Image
+            src={farmaceutico}
+            alt="Farmacêutica confere a caixa de um medicamento na farmácia central de um hospital."
+            width={620}
+            height={760}
+            loading="lazy"
+            class="h-[19rem] w-full object-cover saturate-[0.72]"
+          />
+          <span
+            class="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,color-mix(in_oklab,var(--color-violet-950)_92%,transparent)_0%,color-mix(in_oklab,var(--color-violet-900)_40%,transparent)_42%,color-mix(in_oklab,var(--color-violet-700)_16%,transparent)_100%)]"
+            aria-hidden="true"></span>
+          <figcaption
+            class="absolute inset-x-5 bottom-4 text-[0.8125rem] leading-snug text-fg-on-ink-muted"
+          >
+            A decisão começa na farmácia central, não na diretoria.
+          </figcaption>
+        </figure>
+
+        <div
+        class="flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:overflow-visible lg:pb-0"
+        role="tablist"
+        aria-label="Perfis atendidos"
+        data-tabs
+      >
+        {
+          publico.tabs.map((t, i) => (
+            <button
+              type="button"
+              role="tab"
+              id={`tab-${t.id}`}
+              aria-controls={`panel-${t.id}`}
+              aria-selected={i === 0 ? 'true' : 'false'}
+              tabindex={i === 0 ? 0 : -1}
+              class="relative shrink-0 rounded-field border border-transparent px-4 pt-3 pb-4 text-left text-[0.9375rem] font-medium whitespace-nowrap text-fg-subtle transition-colors duration-300 hover:text-fg aria-selected:border-border aria-selected:bg-bg aria-selected:text-fg aria-selected:shadow-sm lg:whitespace-normal"
+            >
+              {t.label}
+            </button>
+          ))
+        }
+        </div>
+      </div>
+
+      <div class="min-h-[19rem]">
+        {
+          publico.tabs.map((t, i) => (
+            <div
+              role="tabpanel"
+              id={`panel-${t.id}`}
+              aria-labelledby={`tab-${t.id}`}
+              hidden={i !== 0}
+              class="panel rounded-card border border-border bg-bg p-7 sm:p-10"
+            >
+              <h3 class="text-h3 max-w-[28ch] text-fg">{t.title}</h3>
+              <p class="measure mt-5 text-fg-muted">{t.body}</p>
+              <ul class="mt-8 flex flex-col gap-3 border-t border-border pt-6">
+                {t.pontos.map((p) => (
+                  <li class="flex items-center gap-3 text-[0.9375rem] text-fg">
+                    <span
+                      class="h-1.5 w-1.5 shrink-0 rounded-full bg-violet-500"
+                      aria-hidden="true"
+                    />
+                    {p}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  @keyframes panel-in {
+    from {
+      opacity: 0;
+      transform: translate3d(10px, 0, 0);
+      filter: blur(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+      filter: none;
+    }
+  }
+
+  .panel:not([hidden]) {
+    animation: panel-in 0.5s var(--ease-out) both;
+  }
+
+  @keyframes tab-clock {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  [data-tabs][data-auto] [role='tab'][aria-selected='true']::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0.75rem;
+    bottom: 0.4rem;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--color-violet-500);
+    transform-origin: left;
+    animation: tab-clock 10s linear both;
+  }
+
+  [data-tabs][data-auto='hold'] [role='tab'][aria-selected='true']::after {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .panel:not([hidden]) {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  const list = document.querySelector<HTMLElement>('[data-tabs]');
+  if (list) {
+    const tabs = [...list.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+
+    const select = (tab: HTMLButtonElement, focus = true) => {
+      for (const t of tabs) {
+        const on = t === tab;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+        const panel = document.getElementById(t.getAttribute('aria-controls')!);
+        if (panel) panel.hidden = !on;
+      }
+      if (focus) tab.focus();
+    };
+
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let inview = false;
+    let held = false;
+    let stopped = reduce;
+
+    const arm = () => {
+      if (stopped || !inview) list.removeAttribute('data-auto');
+      else list.dataset.auto = held ? 'hold' : 'on';
+    };
+
+    const halt = () => {
+      stopped = true;
+      arm();
+    };
+
+    const hold = (on: boolean) => {
+      held = on;
+      arm();
+    };
+
+    list.addEventListener('animationend', (e) => {
+      if (!(e as AnimationEvent).animationName.includes('tab-clock') || stopped) return;
+      const i = tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true');
+      select(tabs[(i + 1) % tabs.length], false);
+    });
+
+    list.addEventListener('pointerenter', () => hold(true));
+    list.addEventListener('pointerleave', () => hold(false));
+    list.addEventListener('focusin', () => hold(true));
+    list.addEventListener('focusout', () => hold(false));
+
+    new IntersectionObserver(
+      ([e]) => {
+        inview = e.isIntersecting;
+        arm();
+      },
+      { threshold: 0.3 }
+    ).observe(list);
+
+    for (const tab of tabs) {
+      tab.addEventListener('click', () => {
+        halt();
+        select(tab, false);
+      });
+      tab.addEventListener('keydown', (e) => {
+        const i = tabs.indexOf(tab);
+        const next =
+          e.key === 'ArrowDown' || e.key === 'ArrowRight'
+            ? tabs[(i + 1) % tabs.length]
+            : e.key === 'ArrowUp' || e.key === 'ArrowLeft'
+              ? tabs[(i - 1 + tabs.length) % tabs.length]
+              : e.key === 'Home'
+                ? tabs[0]
+                : e.key === 'End'
+                  ? tabs[tabs.length - 1]
+                  : null;
+        if (next) {
+          e.preventDefault();
+          halt();
+          select(next);
+        }
+      });
+    }
+  }
+</script>

@@ -1,0 +1,28 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  tone?: 'light' | 'ink';
+  icon?: string;
+  class?: string;
+}
+
+const { tone = 'light', icon, class: className = '' } = Astro.props;
+
+const tones = {
+  light: 'bg-violet-100 text-violet-800',
+  ink: 'bg-white/10 text-fg-on-ink'
+};
+---
+
+<span
+  class:list={[
+    'micro inline-flex items-center rounded-pill py-1.5',
+    icon ? 'gap-1.5 pr-3 pl-2.5' : 'px-3',
+    tones[tone],
+    className
+  ]}
+>
+  {icon && <Icon name={`hugeicons:${icon}`} class="h-3.5 w-3.5 shrink-0 opacity-80" />}
+  <slot />
+</span>

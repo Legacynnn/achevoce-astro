@@ -1,111 +1,97 @@
 ---
-import { hero } from '../../data/content';
-import { CTA_URL } from '../../lib/site';
+import Eyebrow from '../ui/Eyebrow.astro';
 import Button from '../ui/Button.astro';
-import ProductFrame from '../ui/ProductFrame.astro';
-import marketplace from '../../assets/screens/favoritos.png';
+import Mesh from '../bg/Mesh.astro';
+import Beams from '../bg/Beams.astro';
+import Grain from '../bg/Grain.astro';
+import Fluxo from '../widgets/Fluxo.astro';
+import { hero, site } from '../../data/content.ts';
 ---
 
-<section id="top" class="relative isolate">
-  <div class="aurora-clip" aria-hidden="true">
-    <div class="aurora"></div>
+<section
+  id="topo"
+  data-ink
+  class="on-ink relative isolate overflow-hidden bg-bg-ink text-fg-on-ink-muted"
+>
+  <Mesh
+    colors={['color-violet-500', 'color-violet-700', 'color-violet-400', 'color-violet-600']}
+    intensity="bold"
+    speed={34}
+    blur={100}
+    count={4}
+  />
+  <Beams
+    count={7}
+    angle={16}
+    speed={12}
+    intensity="subtle"
+    colors={['color-violet-300', 'color-violet-400']}
+  />
+  <Grain opacity={0.12} />
+
+  <div
+    class="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(to_top,var(--color-bg-ink),transparent)]"
+    aria-hidden="true"
+  >
   </div>
 
-  <div class="container-page">
-    <div class="hero-copy flex flex-col pt-[calc(var(--header-h)+1.5rem)] sm:pt-[calc(var(--header-h)+3rem)]">
-      <span class="hero-in eyebrow marker max-w-full self-start rounded-pill border border-border bg-bg-raised/85 px-3 py-2 text-[0.625rem] backdrop-blur-sm sm:px-4 sm:text-eyebrow">
-        <span class="size-1.5 shrink-0 rounded-full bg-moss-600" aria-hidden="true"></span>
-        {hero.eyebrow}
-      </span>
+  <div
+    class="container-page relative grid items-center gap-14 pt-[calc(var(--header-h)+4.5rem)] pb-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,25rem)] lg:gap-x-20 lg:pt-[calc(var(--header-h)+8.5rem)] lg:pb-32 xl:gap-x-28"
+  >
+    <div class="min-w-0 max-w-2xl">
+      <div class="hero-in" style="--d:0ms">
+        <Eyebrow tone="ink" icon={hero.eyebrowIcon}>{hero.eyebrow}</Eyebrow>
+      </div>
 
-      <h1 class="mt-6 text-hero sm:mt-14">
-        <span class="hero-in block" style="--d:80ms">{hero.title[0]}</span>
-        <span class="hero-in block text-fg-muted italic" style="--d:180ms">{hero.title[1]}</span>
+      <h1 class="text-hero mt-7 text-fg-on-ink">
+        {
+          hero.title.map((line, i) => (
+            <span class="line-mask" data-inview style={`--i:${i + 1}`}>
+              <span>{line}</span>
+            </span>
+          ))
+        }
       </h1>
 
-      <div class="mt-6 grid gap-x-12 gap-y-4 sm:mt-12 sm:gap-y-8 lg:mt-14 lg:grid-cols-12 lg:items-end">
-        <p class="hero-in max-w-lg text-lead text-fg-muted lg:col-span-6" style="--d:300ms">
-          {hero.lead}
-        </p>
+      <p class="hero-in text-lead mt-7 max-w-[52ch]" style="--d:420ms">
+        {hero.lead}
+      </p>
 
-        <div
-          class="hero-in flex flex-wrap items-center gap-x-8 gap-y-3 sm:gap-y-4 lg:col-span-5 lg:col-start-8 lg:justify-end"
-          style="--d:360ms"
+      <div
+        class="hero-in mt-10 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center"
+        style="--d:520ms"
+      >
+        <Button href={site.cta} size="lg" class="justify-center sm:justify-start">
+          {hero.ctaPrimary}
+        </Button>
+        <Button
+          href="#plataforma"
+          variant="ghost-ink"
+          size="lg"
+          class="justify-center sm:justify-start"
         >
-          <Button href={CTA_URL} variant="cta" size="lg" class="lg:order-2">
-            {hero.ctaPrimary}
-          </Button>
-          <Button href="#como-funciona" variant="quiet" class="lg:order-1">
-            {hero.ctaSecondary}
-          </Button>
-        </div>
+          {hero.ctaSecondary}
+        </Button>
+      </div>
+    </div>
+
+    <div
+      class="hero-in min-w-0 lg:w-full"
+      style="--d:300ms"
+    >
+      <div data-parallax="0.05" class="parallax-layer">
+        <Fluxo />
       </div>
     </div>
   </div>
 
-  <div class="container-page mt-8 sm:mt-10 md:mt-14">
-    <div class="relative overflow-x-clip">
-      <div class="screen-glow" aria-hidden="true"></div>
-      <div class="hero-screen">
-        <ProductFrame
-          src={marketplace}
-          alt="Tela do Ache Você com a busca por itens disponíveis e um anúncio de carrinho de emergência publicado por um hospital de Salvador."
-        />
-      </div>
-    </div>
-  </div>
-
-  <div class="container-page mt-10 sm:mt-14 md:mt-20">
-    <ul class="grid gap-px border-t border-border bg-border sm:grid-cols-3">
-      {
-        hero.proof.map((item) => (
-          <li class="flex items-start gap-3 bg-bg py-5 text-sm text-fg-subtle sm:px-6 sm:py-6 sm:first:pl-0 sm:last:pr-0">
-            <svg
-              class="mt-0.5 size-4 shrink-0 text-moss-600"
-              viewBox="0 0 16 16"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M3.5 8.5 6.5 11.5 12.5 4.5"
-                stroke="currentColor"
-                stroke-width="1.6"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-            {item}
-          </li>
-        ))
-      }
-    </ul>
-  </div>
 </section>
 
 <style>
-  .hero-copy {
-    min-height: 0;
-  }
-
-  @media (width >= 40rem) {
-    .hero-copy {
-      min-height: max(31rem, 74svh);
-    }
-  }
-
-  .hero-in {
-    animation: rise 0.75s var(--ease-out-expo) var(--d, 0ms) both;
-  }
-
-  .hero-screen {
-    transform-origin: top center;
-    animation: hero-screen-in 1.1s var(--ease-out-expo) 440ms both;
-  }
-
-  @keyframes hero-screen-in {
+  @keyframes hero-in {
     from {
       opacity: 0;
-      transform: perspective(1600px) translate3d(0, 48px, 0) rotateX(9deg) scale(0.94);
+      transform: translate3d(0, 20px, 0);
     }
     to {
       opacity: 1;
@@ -113,10 +99,23 @@ import marketplace from '../../assets/screens/favoritos.png';
     }
   }
 
+  .hero-in {
+    animation: hero-in 0.85s var(--ease-out) var(--d) both;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .parallax-layer {
+      will-change: transform;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .hero-in,
-    .hero-screen {
+    .hero-in {
       animation: none;
+    }
+
+    .parallax-layer {
+      will-change: auto;
     }
   }
 </style>

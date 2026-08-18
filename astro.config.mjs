@@ -2,7 +2,6 @@
 import { defineConfig, fontProviders } from 'astro/config';
 
 import tailwindcss from '@tailwindcss/vite';
-import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import icon from 'astro-icon';
 
@@ -13,26 +12,35 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
 
-  integrations: [react(), sitemap(), icon({ include: { lucide: ['*'] } })],
+  integrations: [sitemap(), icon({ include: { hugeicons: ['*'] } })],
 
   fonts: [
     {
-      name: 'Fraunces',
-      cssVariable: '--font-fraunces',
-      provider: fontProviders.google(),
-      weights: ['300 900'],
-      styles: ['normal', 'italic'],
-      subsets: ['latin', 'latin-ext'],
-      fallbacks: ['Georgia', 'serif']
-    },
-    {
-      name: 'Inter Tight',
-      cssVariable: '--font-inter-tight',
+      name: 'Gabarito',
+      cssVariable: '--font-gabarito',
       provider: fontProviders.google(),
       weights: ['400 700'],
       styles: ['normal'],
       subsets: ['latin', 'latin-ext'],
       fallbacks: ['system-ui', 'sans-serif']
+    },
+    {
+      name: 'Schibsted Grotesk',
+      cssVariable: '--font-schibsted',
+      provider: fontProviders.google(),
+      weights: ['400 700'],
+      styles: ['normal', 'italic'],
+      subsets: ['latin', 'latin-ext'],
+      fallbacks: ['system-ui', 'sans-serif']
+    },
+    {
+      name: 'Spline Sans Mono',
+      cssVariable: '--font-spline-mono',
+      provider: fontProviders.google(),
+      weights: ['400 600'],
+      styles: ['normal'],
+      subsets: ['latin'],
+      fallbacks: ['ui-monospace', 'monospace']
     }
   ]
 });

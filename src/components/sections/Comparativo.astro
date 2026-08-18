@@ -1,0 +1,64 @@
+---
+import { Icon } from 'astro-icon/components';
+import SectionHeading from '../ui/SectionHeading.astro';
+import { comparativo, comparativoIcons } from '../../data/content.ts';
+
+const pares = comparativo.nossa.rows.map((r, i) => ({
+  nossa: r,
+  outra: comparativo.outra.rows[i],
+  icon: comparativoIcons[i]
+}));
+---
+
+<section id="comparativo" class="section bg-bg-subtle">
+  <div class="container-page">
+    <SectionHeading eyebrow={comparativo.eyebrow} eyebrowIcon={comparativo.eyebrowIcon} title={comparativo.title} />
+
+    <div class="mt-14 grid gap-4 lg:grid-cols-2 lg:gap-6">
+      <div
+        class="reveal rounded-card border border-violet-200 bg-bg p-6 sm:p-8"
+        data-reveal
+      >
+        <p class="font-display text-h3 text-violet-800">{comparativo.nossa.label}</p>
+        <ul class="mt-6 flex flex-col">
+          {
+            pares.map((p, i) => (
+              <li
+                class="reveal flex items-start gap-3 border-b border-border py-3.5 last:border-0"
+                style={`--i:${i}`}
+                data-reveal
+              >
+                <Icon
+                  name={`hugeicons:${p.icon}`}
+                  class="mt-0.5 h-[1.125rem] w-[1.125rem] shrink-0 text-violet-600"
+                />
+                <span class="text-[0.9375rem] text-fg">{p.nossa}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="reveal rounded-card border border-border bg-bg-panel p-6 sm:p-8" data-reveal>
+        <p class="font-display text-h3 text-fg-subtle">{comparativo.outra.label}</p>
+        <ul class="mt-6 flex flex-col">
+          {
+            pares.map((p, i) => (
+              <li
+                class="reveal flex items-start gap-3 border-b border-border py-3.5 last:border-0"
+                style={`--i:${i}`}
+                data-reveal
+              >
+                <Icon
+                  name={`hugeicons:${p.icon}`}
+                  class="mt-0.5 h-[1.125rem] w-[1.125rem] shrink-0 text-border-strong"
+                />
+                <span class="text-[0.9375rem] text-fg-subtle">{p.outra}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

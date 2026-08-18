@@ -1,0 +1,44 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import { itemArt } from '../../lib/itemArt';
+
+interface Props {
+  art: string;
+  icon: string;
+  size?: number;
+  class?: string;
+}
+
+const { art, icon, size = 44, class: extra = '' } = Astro.props;
+const photo = itemArt[art];
+const px = `${size}px`;
+---
+
+<span
+  class:list={[
+    'relative grid shrink-0 place-items-center overflow-hidden rounded-field',
+    photo
+      ? 'bg-bg-panel ring-1 ring-border ring-inset'
+      : 'bg-violet-100 text-violet-700 ring-1 ring-violet-200 ring-inset transition-colors duration-300 group-hover/item:bg-violet-200 group-hover/item:text-violet-800',
+    extra
+  ]}
+  style={`width:${px};height:${px}`}
+  aria-hidden="true"
+>
+  {
+    photo ? (
+      <Image
+        src={photo}
+        alt=""
+        width={size * 2}
+        height={size * 2}
+        loading="lazy"
+        class="h-full w-full scale-105 object-cover saturate-[0.7] transition-transform duration-500 ease-[var(--ease-out)] group-hover/item:scale-110"
+      />
+    ) : (
+      <Icon name={`hugeicons:${icon}`} style={`width:${Math.round(size * 0.5)}px;height:${Math.round(size * 0.5)}px`} />
+    )
+  }
+  {photo && <span class="absolute inset-0 bg-violet-800/22"></span>}
+</span>
