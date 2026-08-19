@@ -8,7 +8,7 @@ import { nav, site } from '../data/content.ts';
     <nav
       id="site-nav"
       data-state="hero"
-      class="group/nav relative flex items-center justify-between gap-2 rounded-pill border border-transparent bg-transparent pr-2 pl-3 sm:gap-4 sm:pr-2 transition-[background-color,border-color,box-shadow,backdrop-filter] duration-500 ease-[var(--ease-out)] data-[state=float]:border-border data-[state=float]:bg-bg/88 data-[state=float]:shadow-md data-[state=float]:backdrop-blur-xl data-[state=float]:backdrop-saturate-150 data-[state=ink]:border-border-ink data-[state=ink]:bg-bg-ink/64 data-[state=ink]:shadow-md data-[state=ink]:backdrop-blur-xl data-[state=ink]:backdrop-saturate-150 sm:pl-5 supports-[not(backdrop-filter:blur(1px))]:data-[state=float]:bg-bg/96 supports-[not(backdrop-filter:blur(1px))]:data-[state=ink]:bg-bg-ink/92"
+      class="group/nav relative flex items-center justify-between gap-2 rounded-pill border border-transparent bg-transparent pr-2 pl-3 sm:gap-4 sm:pr-2 transition-[background-color,border-color,box-shadow] duration-500 ease-[var(--ease-out)] data-[state=float]:border-border data-[state=float]:bg-bg/88 data-[state=float]:shadow-md data-[state=float]:backdrop-blur-xl data-[state=float]:backdrop-saturate-150 data-[state=ink]:border-border-ink data-[state=ink]:bg-bg-ink/64 data-[state=ink]:shadow-md data-[state=ink]:backdrop-blur-xl data-[state=ink]:backdrop-saturate-150 sm:pl-5 supports-[not(backdrop-filter:blur(1px))]:data-[state=float]:bg-bg/96 supports-[not(backdrop-filter:blur(1px))]:data-[state=ink]:bg-bg-ink/92"
       aria-label="Principal"
     >
       <a
@@ -128,7 +128,7 @@ import { nav, site } from '../data/content.ts';
 <style>
   #site-nav {
     height: 3.5rem;
-    transition-property: background-color, border-color, box-shadow, backdrop-filter, height;
+    transition-property: background-color, border-color, box-shadow, height;
   }
 
   @media (width >= 48rem) {
@@ -146,6 +146,21 @@ import { nav, site } from '../data/content.ts';
     #site-nav[data-state='float'],
     #site-nav[data-state='ink'] {
       height: 3.5rem;
+    }
+  }
+
+  @media (pointer: coarse) {
+    #site-nav[data-state='float'],
+    #site-nav[data-state='ink'] {
+      backdrop-filter: none;
+    }
+
+    #site-nav[data-state='float'] {
+      background-color: var(--color-bg);
+    }
+
+    #site-nav[data-state='ink'] {
+      background-color: var(--color-bg-ink);
     }
   }
 

@@ -341,6 +341,7 @@
   inset: 0;
   overflow: hidden;
   pointer-events: none;
+  contain: layout paint;
 
   & > i {
     position: absolute;
@@ -349,6 +350,17 @@
     filter: blur(var(--mesh-blur, 84px));
     animation: var(--blob-anim) var(--blob-dur) ease-in-out var(--blob-delay) infinite;
   }
+
+  @media (pointer: coarse), (width < 64rem) {
+    & > i {
+      filter: blur(min(var(--mesh-blur, 84px), 56px));
+      animation: none;
+    }
+
+    & > i:nth-child(n + 4) {
+      display: none;
+    }
+  }
 }
 
 @utility beams {
@@ -356,6 +368,7 @@
   inset: 0;
   overflow: hidden;
   pointer-events: none;
+  contain: layout paint;
 
   & > i {
     position: absolute;
@@ -366,6 +379,18 @@
     filter: blur(16px);
     animation: beam-breathe var(--beam-dur) ease-in-out var(--beam-delay) infinite;
   }
+
+  @media (pointer: coarse), (width < 64rem) {
+    & > i {
+      filter: blur(12px);
+      opacity: 0.6;
+      animation: none;
+    }
+
+    & > i:nth-child(n + 5) {
+      display: none;
+    }
+  }
 }
 
 @utility grain {
@@ -374,6 +399,11 @@
   overflow: hidden;
   pointer-events: none;
   opacity: var(--grain-opacity, 0.16);
+  contain: layout paint;
+
+  @media (pointer: coarse), (width < 64rem) {
+    display: none;
+  }
 }
 
 @utility reveal {
