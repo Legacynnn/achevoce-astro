@@ -353,7 +353,8 @@
 
   @media (pointer: coarse), (width < 64rem) {
     & > i {
-      filter: blur(min(var(--mesh-blur, 84px), 56px));
+      filter: blur(min(var(--mesh-blur, 84px), 44px));
+      max-height: 70vh;
       animation: none;
     }
 
@@ -396,14 +397,16 @@
 @utility grain {
   position: absolute;
   inset: 0;
-  overflow: hidden;
   pointer-events: none;
   opacity: var(--grain-opacity, 0.16);
-  contain: layout paint;
+  background-image: var(--grain-texture);
+  background-repeat: repeat;
+  background-size: var(--grain-tile, 120px) var(--grain-tile, 120px);
+  contain: strict;
+}
 
-  @media (pointer: coarse), (width < 64rem) {
-    display: none;
-  }
+@utility grain-anim {
+  animation: grain-jitter 0.6s steps(1) infinite;
 }
 
 @utility reveal {
@@ -451,6 +454,18 @@
   }
 }
 
+@media (pointer: coarse) {
+  .reveal[data-inview] {
+    animation-duration: 0.42s;
+    animation-delay: calc(var(--i, 0) * 40ms);
+  }
+
+  .line-mask[data-inview] > span {
+    animation-duration: 0.5s;
+    animation-delay: calc(var(--i, 0) * 45ms);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -458,7 +473,7 @@
 
   .mesh > i,
   .beams > i,
-  .grain > svg {
+  .grain {
     animation: none !important;
   }
 

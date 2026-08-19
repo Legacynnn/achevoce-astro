@@ -103,6 +103,13 @@ import { hero, site } from '../../data/content.ts';
     animation: hero-in 0.85s var(--ease-out) var(--d) both;
   }
 
+  @media (pointer: coarse) {
+    .hero-in {
+      animation-duration: 0.5s;
+      animation-delay: calc(var(--d, 0ms) * 0.55);
+    }
+  }
+
   @media (hover: hover) and (pointer: fine) {
     .parallax-layer {
       will-change: transform;

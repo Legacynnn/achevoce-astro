@@ -115,7 +115,9 @@ const jsonLd = {
               }
             }
           },
-          { rootMargin: '0px 0px -12% 0px', threshold: 0.15 }
+          matchMedia('(pointer: coarse)').matches
+            ? { rootMargin: '0px 0px 12% 0px', threshold: 0 }
+            : { rootMargin: '0px 0px -12% 0px', threshold: 0.15 }
         );
 
         for (const el of targets) io.observe(el);

@@ -47,7 +47,7 @@ const s = skins[skin];
   style={`background:${s.bg}`}
 >
   <div
-    class="pointer-events-none absolute -inset-8 -z-10 rounded-[3rem] opacity-70 blur-3xl"
+    class="glow pointer-events-none absolute -inset-8 -z-10 rounded-[3rem] opacity-70 blur-3xl"
     style={`background:radial-gradient(60% 60% at 50% 50%, color-mix(in oklab, ${s.glow} 34%, transparent), transparent 72%)`}
     aria-hidden="true"
   >
@@ -69,3 +69,11 @@ const s = skins[skin];
     </div>
   </div>
 </div>
+
+<style>
+  @media (pointer: coarse) {
+    .glow {
+      filter: blur(28px);
+    }
+  }
+</style>
